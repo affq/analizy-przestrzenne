@@ -61,12 +61,26 @@ aspect_overlay = FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'OR')
 aspect_overlay.save(f'{geobaza}\\kryterium_6')
 
 #kryterium 7 - wezly
-wezly_rosnaca = FuzzyMembership(wezly, fuzzy_function="LINEAR 0 2")
-wezly_malejaca = FuzzyMembership(wezly, fuzzy_function="LINEAR 1000 4000")
-wezly_mapa = FuzzyOverlay([wezly_rosnaca, wezly_malejaca], 'AND')
-wezly_mapa.save(f'{geobaza}\\kryterium_7')
+wezly_fuzzy = FuzzyMembership(wezly, fuzzy_function="LINEAR 1000 4000")
+wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
 
 weights = {
+    'kryterium_1': 1/7,
+    'kryterium_2': 1/7,
+    'kryterium_3': 1/7,
+    'kryterium_4': 1/7,
+    'kryterium_5': 1/7,
+    'kryterium_6': 1/7,
+    'kryterium_7': 1/7
 }
 
-#weighted sum
+#dodaj kryterium 4
+tabela_kryteriow = WSTable([[f'{geobaza}\\kryterium_1', "VALUE", weights['kryterium_1']], [f'{geobaza}\\kryterium_2', "VALUE", weights['kryterium_2']], [f'{geobaza}\\kryterium_3', "VALUE", weights['kryterium_3']], [f'{geobaza}\\kryterium_5', "VALUE", weights['kryterium_5']], [f'{geobaza}\\kryterium_6', "VALUE", weights['kryterium_6']], [f'{geobaza}\\kryterium_7', "VALUE", weights['kryterium_7']]])
+weighted_sum = WeightedSum(tabela_kryteriow)
+weighted_sum.save(f'{geobaza}\\suma_rozmyte')
+
+kryteria_ostre = FuzzyOverlay([woda_mapa, budynki_mieszkalne, lasy_fuzzy, aspect_overlay], 'AND')
+kryteria_ostre.save(f'{geobaza}\\kryteria_ostre')
+
+suma = FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
+suma.save(f'{geobaza}\\wynik')
