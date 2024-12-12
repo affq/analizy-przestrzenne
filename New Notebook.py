@@ -17,6 +17,7 @@ ptlz = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_02
 nmt = f'{geobaza}\\nmt'
 drogi = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'drogi')
 wezly = f'{geobaza}\\wezly_raster'
+dzialki = f'{geobaza}\\dzialki'
 
 import arcpy.analysis
 import arcpy.management
@@ -84,3 +85,34 @@ kryteria_ostre.save(f'{geobaza}\\kryteria_ostre')
 
 suma = FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
 suma.save(f'{geobaza}\\wynik')
+
+#reclassify
+wynik_reclassified = Reclassify(suma, "VALUE", RemapRange([[0, 0.6, 0], [0.6, 1, 1]]))
+wynik_reclassified.save(f'{geobaza}\\wynik_reclassified')
+
+#wybierz dzialki na terenie przydatnym
+poligon_przydatnosci = "poligon_przydatnosci"
+arcpy.conversion.RasterToPolygon(wynik_reclassified, poligon_przydatnosci, "NO_SIMPLIFY", "VALUE")
+
+dzialki_przydatne = "dzialki_przydatne"
+arcpy.analysis.Intersect([dzialki, poligon_przydatnosci], dzialki_przydatne, "ALL")
+
+arcpy.management.AddField(dzialki_przydatne, "Area_Przydatne", "DOUBLE")
+arcpy.management.CalculateGeometryAttributes(dzialki_przydatne, [["Area_Przydatne", "AREA"]])
+
+arcpy.management.AddField(dzialki, "Total_Area", "DOUBLE")
+arcpy.management.CalculateGeometryAttributes(dzialki, [["Total_Area", "AREA"]])
+
+join_wynik = "dzialki_z_sumowana_przydatnoscia"
+arcpy.analysis.SpatialJoin(dzialki, dzialki_przydatne, join_wynik, "JOIN_ONE_TO_ONE", "KEEP_ALL", 
+                           match_option="HAVE_THEIR_CENTER_IN")
+
+arcpy.management.AddField(join_wynik, "Procent_Przydatne", "DOUBLE")
+arcpy.management.CalculateField(join_wynik, "Procent_Przydatne", 
+                                "!Area_Przydatne! / !Total_Area! * 100", "PYTHON3")
+
+arcpy.management.MakeFeatureLayer(join_wynik, "dzialki_layer")
+arcpy.management.SelectLayerByAttribute("dzialki_layer", "NEW_SELECTION", "Procent_Przydatne < 60")
+
+# Zapis wynikowych działek do nowej warstwy
+arcpy.management.CopyFeatures("dzialki_layer", f"{geobaza}\\dzialki_przydatne_60")
