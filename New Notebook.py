@@ -94,25 +94,29 @@ wynik_reclassified.save(f'{geobaza}\\wynik_reclassified')
 poligon_przydatnosci = "poligon_przydatnosci"
 arcpy.conversion.RasterToPolygon(wynik_reclassified, poligon_przydatnosci, "NO_SIMPLIFY", "VALUE")
 
-dzialki_przydatne = "dzialki_przydatne"
-arcpy.analysis.Intersect([dzialki, poligon_przydatnosci], dzialki_przydatne, "ALL")
+poligon_przydatnosci_layer = "poligon_przydatnosci_layer"
+arcpy.management.MakeFeatureLayer(poligon_przydatnosci, poligon_przydatnosci_layer)
+arcpy.management.SelectLayerByAttribute(poligon_przydatnosci_layer, "NEW_SELECTION", "gridcode = 1")
+arcpy.management.CopyFeatures(poligon_przydatnosci_layer, f"{geobaza}\\poligon_przydatnosci")
 
-arcpy.management.AddField(dzialki_przydatne, "Area_Przydatne", "DOUBLE")
-arcpy.management.CalculateGeometryAttributes(dzialki_przydatne, [["Area_Przydatne", "AREA"]])
+dzialki_przeciete = "dzialki_przeciete"
+arcpy.analysis.Intersect([dzialki, poligon_przydatnosci], dzialki_przeciete, "ALL")
+arcpy.management.CopyFeatures(dzialki_przeciete, f"{geobaza}\\dzialki_przeciete_przez_poligony")
 
-arcpy.management.AddField(dzialki, "Total_Area", "DOUBLE")
-arcpy.management.CalculateGeometryAttributes(dzialki, [["Total_Area", "AREA"]])
+#oblicz pole czesci kazdej z dzialek
+arcpy.management.AddField(dzialki_przeciete, "pole", "DOUBLE")
+arcpy.management.CalculateField(dzialki_przeciete, "pole", "!shape.area@SQUAREMETERS!", "PYTHON3")
 
-join_wynik = "dzialki_z_sumowana_przydatnoscia"
-arcpy.analysis.SpatialJoin(dzialki, dzialki_przydatne, join_wynik, "JOIN_ONE_TO_ONE", "KEEP_ALL", 
-                           match_option="HAVE_THEIR_CENTER_IN")
+#zlacz czesc przydatna i nieprzydatna kazdej z dzialek na podstawie ID_DZIALKI
+dzialki_przeciete_layer = "dzialki_przeciete_layer"
 
-arcpy.management.AddField(join_wynik, "Procent_Przydatne", "DOUBLE")
-arcpy.management.CalculateField(join_wynik, "Procent_Przydatne", 
-                                "!Area_Przydatne! / !Total_Area! * 100", "PYTHON3")
+arcpy.management.MakeFeatureLayer(dzialki_przeciete, dzialki_przeciete_layer)
+arcpy.management.SelectLayerByAttribute(dzialki_przeciete_layer, "NEW_SELECTION", "gridcode = 1")
+arcpy.management.Statistics(dzialki_przeciete_layer, "suma_pola", [["pole", "SUM"]], "ID_DZIALKI")
 
-arcpy.management.MakeFeatureLayer(join_wynik, "dzialki_layer")
-arcpy.management.SelectLayerByAttribute("dzialki_layer", "NEW_SELECTION", "Procent_Przydatne < 60")
+arcpy.management.SelectLayerByAttribute(dzialki_przeciete_layer, "SWITCH_SELECTION")
+arcpy.management.Statistics(dzialki_przeciete_layer, "suma_pola", [["pole", "SUM"]], "ID_DZIALKI")
 
-# Zapis wynikowych działek do nowej warstwy
-arcpy.management.CopyFeatures("dzialki_layer", f"{geobaza}\\dzialki_przydatne_60")
+
+
+
