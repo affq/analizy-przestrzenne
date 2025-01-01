@@ -1,9 +1,9 @@
 import arcpy
 
-geobaza = r"C:/Users/adria/OneDrive/Pulpit/studia_foldery/analizy-przestrzenne/MyProject12/MyProject12.gdb"
-
+# geobaza = r"C:/Users/adria/OneDrive/Pulpit/studia_foldery/analizy-przestrzenne/MyProject12/MyProject12.gdb"
+geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
 arcpy.env.workspace = "in_memory"
-arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRF2000-PL_CS92")
+arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
 arcpy.env.extent = f"{geobaza}\\A03_Granice_gmin_Proj_Buffer"
 arcpy.env.mask = f"{geobaza}\\A03_Granice_gmin_Proj_Buffer"
 arcpy.env.cellSize = 5
@@ -103,19 +103,33 @@ dzialki_przeciete = "dzialki_przeciete"
 arcpy.analysis.Intersect([dzialki, poligon_przydatnosci], dzialki_przeciete, "ALL")
 arcpy.management.CopyFeatures(dzialki_przeciete, f"{geobaza}\\dzialki_przeciete_przez_poligony")
 
-#oblicz pole czesci kazdej z dzialek
 arcpy.management.AddField(dzialki_przeciete, "pole", "DOUBLE")
 arcpy.management.CalculateField(dzialki_przeciete, "pole", "!shape.area@SQUAREMETERS!", "PYTHON3")
 
-#zlacz czesc przydatna i nieprzydatna kazdej z dzialek na podstawie ID_DZIALKI
-dzialki_przeciete_layer = "dzialki_przeciete_layer"
+arcpy.management.AddField(dzialki, "pole", "DOUBLE")
+arcpy.management.CalculateField(dzialki, "pole", "!shape.area@SQUAREMETERS!", "PYTHON3")
 
-arcpy.management.MakeFeatureLayer(dzialki_przeciete, dzialki_przeciete_layer)
-arcpy.management.SelectLayerByAttribute(dzialki_przeciete_layer, "NEW_SELECTION", "gridcode = 1")
-arcpy.management.Statistics(dzialki_przeciete_layer, "suma_pola", [["pole", "SUM"]], "ID_DZIALKI")
+arcpy.management.AddField(dzialki, "pole_przydatne", "DOUBLE")
+arcpy.management.CalculateField(dzialki, "pole_przydatne", 0, "PYTHON3")
 
-arcpy.management.SelectLayerByAttribute(dzialki_przeciete_layer, "SWITCH_SELECTION")
-arcpy.management.Statistics(dzialki_przeciete_layer, "suma_pola", [["pole", "SUM"]], "ID_DZIALKI")
+with arcpy.da.UpdateCursor(dzialki_przeciete, ["ID_DZIALKI", "pole", "gridcode"]) as cursor:
+    for row in cursor:
+        if row[2] == 1:
+            with arcpy.da.UpdateCursor(dzialki, ["ID_DZIALKI", "pole", "pole_przydatne"]) as cursor2:
+                for row2 in cursor2:
+                    if row[0] == row2[0]:
+                        row2[2] += row[1]
+                        cursor2.updateRow(row2)
+
+arcpy.management.AddField(dzialki, "przydatnosc", "DOUBLE")
+arcpy.management.CalculateField(dzialki, "przydatnosc", "(!pole_przydatne! / !pole!) * 100", "PYTHON3")
+
+dzialki_layer = "dzialki_layer"
+arcpy.management.MakeFeatureLayer(dzialki, dzialki_layer)
+arcpy.management.SelectLayerByAttribute(dzialki_layer, "NEW_SELECTION", "przydatnosc > 50")
+arcpy.management.CopyFeatures(dzialki_layer, f"{geobaza}\\dzialki_przydatne_powyzej_50")
+
+
 
 
 
