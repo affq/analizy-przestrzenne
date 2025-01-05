@@ -1,0 +1,154 @@
+\documentclass{article}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\parindent = 0pt
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    language=Python,                  % Ustawienie języka na Python
+    basicstyle=\ttfamily\small,       % Czcionka kodu
+    keywordstyle=\color{blue},        % Kolor słów kluczowych
+    commentstyle=\color{green!50!black}, % Kolor komentarzy
+    stringstyle=\color{red},          % Kolor stringów
+    showstringspaces=false,           % Ukryj spacje w stringach
+    frame=single,                     % Ramka wokół kodu
+    breaklines=true,                  % Złam długie linie
+    numbers=left,                     % Numery linii po lewej
+    numberstyle=\tiny\color{gray}     % Styl numerów linii
+}
+
+\title{Projekt 1: Wskazanie optymalnej lokalizacji farmy fotowoltaicznej – analizy wielokryterialne (MCE)}
+\author{Adrian Fabisiewicz (328935)}
+\begin{document}
+\maketitle
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}
+\renewcommand{\labelenumiv}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.\arabic{enumiv}}
+
+\section{Wybór lokalizacji farmy fotowoltaicznej}
+
+co należy wziąć pod uwagę, wybierając lokalizację farmy
+fotowoltaicznej (rozważania teoretyczne, akty prawne wraz z cytowaniami źródeł /
+bibliografią)
+
+\section{Cel i analizowany obszar}
+
+Celem projektu było wskazanie optymalnej lokalizacji nowej farmy fotowoltaicznej dla obszaru gminy Świeradów-Zdrój (powiat lubański, województwo dolnośląskie).
+
+\section{Analizowane kryteria}
+
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{|c|p{4cm}|p{5cm}|p{3.5cm}|}
+    \hline
+    \textbf{Lp} & \textbf{Kryterium} & \textbf{Parametry} & \textbf{Źródło danych do kryterium} \\ \hline
+    1 & odległość od rzek i zbiorników wodnych & jak najbliżej; nieprzekraczalna 100-metrowa strefa ochronna & BDOT10k(SWRS, PTWP)\\ \hline
+    2 & odległość od budynków mieszkalnych & jak najdalej, powyżej 150m & BDOT10k(BUBD)\\ \hline
+    3 & pokrycie terenu & powyżej 15m od lasu, optymalnie powyżej 100m od lasu & BDOT10k(PTLZ)\\ \hline
+    4 & dostęp do dróg utwardzonych & jak największe zagęszczenie & BDOT10k(SKDR)\\ \hline
+    5 & nachylenie stoków & jak najbardziej płasko & NMT\\ \hline
+    6 & dostęp światła słonecznego & optymalnie: stoki południowe (SW-SE) & NMT\\ \hline
+    7 & dobry dojazd od istotnych drogowych węzłów komunikacyjnych & jak najkrótszy czas dojazdu & BDOT10k(SKDR)\\ \hline
+    \multicolumn{4}{|c|}{Łączenie kryteriów} \\ \hline
+    8 & ocena przydatności terenu (próg przydatności) & \multicolumn{2}{|c|}{80\% / 90\% max. przydatności}\\ \hline
+    9 & przydatne działki / grupy działek & min 60\% działki na terenie przydatnym & EGIB \\ \hline
+    10 & powierzchnia i min. szerokość obszaru & \multicolumn{2}{|c|}{2ha / 50m}\\ \hline
+    11 & koszt przyłącza do sieci SN (mapy kosztów) & jak najniższy & BDOT10k (wszystkie warstwy PT)\\ \hline
+    \end{tabular}
+    \caption{Tabela z kryteriami lokalizacji}
+    \label{tab:kryteria}
+    \end{table}
+
+
+\section{Realizacja}
+\subsection{Ustalenie środowiska pracy i ścieżek do danych}
+\begin{lstlisting}
+import arcpy.analysis
+import arcpy.management
+import arcpy.sa
+
+geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
+arcpy.env.workspace = "in_memory"
+arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
+arcpy.env.extent = f"{geobaza}\\gmina_buffer"
+arcpy.env.mask = f"{geobaza}\\gmina_buffer"
+arcpy.env.cellSize = 5
+arcpy.env.overwriteOutput = True
+
+swrs_0210_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0210', f'{geobaza}\\SWRS_L_0210_buffer', '1 Centimeter')
+swrs_0212_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0212', f'{geobaza}\\SWRS_L_0212_buffer', '1 Centimeter')
+water = arcpy.management.Merge([swrs_0210_buffer, swrs_0212_buffer, f'{geobaza}\\PTWP_A_0210', f'{geobaza}\\PTWP_A_0212'], 'water')
+budynki = arcpy.management.Merge([f'{geobaza}\\BUBD_A_0210', f'{geobaza}\\BUBD_A_0212'], 'budynki')
+ptlz = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_0212'], 'ptlz')
+nmt = f'{geobaza}\\nmt'
+drogi = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'drogi')
+wezly = f'{geobaza}\\wezly_raster'
+dzialki = f'{geobaza}\\dzialki'
+pt_merged = f'{geobaza}\\PT_merged'
+linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
+\end{lstlisting}
+
+\subsection{Kryterium 1}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+\subsection{Kryterium 2}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+\subsection{Kryterium 3}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+\subsection{Kryterium 4}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+\subsection{Kryterium 5}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+\subsection{Kryterium 6}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+\subsection{Kryterium 7}
+\subsubsection{Kod}
+\begin{lstlisting}
+\end{lstlisting}
+
+\subsubsection{Wynik}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.75\textwidth]{img/interfejs.png}
+%     \caption*{}
+% \end{figure}
+
+\end{document}

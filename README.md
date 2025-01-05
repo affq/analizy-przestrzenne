@@ -29,7 +29,6 @@ Celem projektu jest przeprowadzenie analizy wielokryterialnej w celu znalezienia
 | 1  | odległość od rzek i zbiorników wodnych | powyżej 100m | BDOT10k(SWRS, PTWP) |
 | 2  | odległość od budynków mieszkalnych | powyżej 150m | BDOT10k(BUBD) |
 | 3  | pokrycie terenu  | powyżej 15m od lasu  | BDOT10k(PTLZ) |
-| 4  | nachylenie stoków  | maksymalnie 10% | NMT |
 
 ### Łączenie kryteriów
 

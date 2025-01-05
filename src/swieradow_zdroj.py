@@ -1,4 +1,3 @@
-import arcpy
 import arcpy.analysis
 import arcpy.management
 import arcpy.sa
