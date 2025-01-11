@@ -1,3 +1,3 @@
-from plesna import licz
+from swieradow_zdroj import licz
 
-licz("test", 1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 30, 50)
+licz("test", 1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 60, 60)

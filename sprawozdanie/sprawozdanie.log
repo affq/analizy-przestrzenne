@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.17)  5 JAN 2025 17:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.17)  11 JAN 2025 18:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -322,33 +322,65 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1373.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1374.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1375.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1376.
+) (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks26
+\inpenc@posthook=\toks27
+) (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+Package: array 2022/09/04 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen177
+\ar@mcellbox=\box57
+\extrarowheight=\dimen178
+\NC@list=\toks28
+\extratabsurround=\skip54
+\backup@length=\skip55
+\ar@cellbox=\box58
+) (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen179
+\lightrulewidth=\dimen180
+\cmidrulewidth=\dimen181
+\belowrulesep=\dimen182
+\belowbottomsep=\dimen183
+\aboverulesep=\dimen184
+\abovetopsep=\dimen185
+\cmidrulesep=\dimen186
+\cmidrulekern=\dimen187
+\defaultaddspace=\dimen188
+\@cmidla=\count300
+\@cmidlb=\count301
+\@aboverulesep=\dimen189
+\@belowrulesep=\dimen190
+\@thisruleclass=\count302
+\@lastruleclass=\count303
+\@thisrulewidth=\dimen191
 ) (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 ) (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count300
-\l__pdf_internal_box=\box57
+\l__color_backend_stack_int=\count304
+\l__pdf_internal_box=\box59
 ) (sprawozdanie.aux)
 \openout1 = `sprawozdanie.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 29.
-LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
@@ -362,20 +394,20 @@ Package caption Info: End \AtBeginDocument code.
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(85.35826pt, 426.79135pt, 85.35826pt)
-* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
+* h-part:(L,W,R)=(72.26999pt, 452.9679pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 700.50687pt, 72.26999pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
-* \textwidth=426.79135pt
-* \textheight=731.23584pt
-* \oddsidemargin=13.08827pt
-* \evensidemargin=13.08827pt
-* \topmargin=-52.36449pt
+* \textwidth=452.9679pt
+* \textheight=700.50687pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=10.0pt
 * \footskip=30.0pt
-* \marginparwidth=49.79231pt
+* \marginparwidth=65.0pt
 * \marginparsep=11.0pt
 * \columnsep=10.0pt
 * \skip\footins=9.0pt plus 4.0pt minus 2.0pt
@@ -390,91 +422,221 @@ Package caption Info: End \AtBeginDocument code.
 
 (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count301
-\scratchdimen=\dimen177
-\scratchbox=\box58
-\nofMPsegments=\count302
-\nofMParguments=\count303
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count304
-\MPscratchDim=\dimen178
-\MPnumerator=\count305
-\makeMPintoPDFobject=\count306
-\everyMPtoPDFconversion=\toks27
+\scratchcounter=\count305
+\scratchdimen=\dimen192
+\scratchbox=\box60
+\nofMPsegments=\count306
+\nofMParguments=\count307
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count308
+\MPscratchDim=\dimen193
+\MPnumerator=\count309
+\makeMPintoPDFobject=\count310
+\everyMPtoPDFconversion=\toks30
 ) (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 29.
+Package hyperref Info: Link coloring OFF on input line 33.
  (sprawozdanie.out) (sprawozdanie.out)
 \@outlinefile=\write3
 \openout3 = `sprawozdanie.out'.
 
-\c@lstlisting=\count307
+\c@lstlisting=\count311
 
-Underfull \hbox (badness 2150) in paragraph at lines 52--52
-[]\T1/cmr/bx/n/10 ™ródªo da-nych do
+Underfull \hbox (badness 2150) in paragraph at lines 56--56
+[]|\T1/cmr/bx/n/10 ™ródªo da-nych do
  []
 
 
-Underfull \hbox (badness 2486) in paragraph at lines 53--53
-[]\T1/cmr/m/n/10 jak naj-bli-»ej; nie-prze-kra-czalna
+Underfull \hbox (badness 2486) in paragraph at lines 57--57
+[]|\T1/cmr/m/n/10 jak naj-bli-»ej; nie-prze-kra-czalna
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 53--53
-[]\T1/cmr/m/n/10 BDOT10k(SWRS,
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
+[]|\T1/cmr/m/n/10 BDOT10k(SWRS,
  []
 
 
-Underfull \hbox (badness 4765) in paragraph at lines 54--54
-[]\T1/cmr/m/n/10 odlegªo±¢ od bu-dyn-ków
+Underfull \hbox (badness 4765) in paragraph at lines 58--58
+[]|\T1/cmr/m/n/10 odlegªo±¢ od bu-dyn-ków
  []
 
 
-Underfull \hbox (badness 6001) in paragraph at lines 58--58
-[]\T1/cmr/m/n/10 dost¦p ±wia-tªa sªo-necz-
+Underfull \hbox (badness 6001) in paragraph at lines 62--62
+[]|\T1/cmr/m/n/10 dost¦p ±wia-tªa sªo-necz-
  []
 
 
-Underfull \hbox (badness 7186) in paragraph at lines 58--58
-[]\T1/cmr/m/n/10 optymalnie: stoki po-ªu-dniowe
+Underfull \hbox (badness 7186) in paragraph at lines 62--62
+[]|\T1/cmr/m/n/10 optymalnie: stoki po-ªu-dniowe
  []
 
 
-Underfull \hbox (badness 1112) in paragraph at lines 64--64
-[]\T1/cmr/m/n/10 koszt przy-ª¡-cza do sieci
+Underfull \hbox (badness 1112) in paragraph at lines 68--68
+[]|\T1/cmr/m/n/10 koszt przy-ª¡-cza do sieci
  []
 
 
-Underfull \hbox (badness 5050) in paragraph at lines 64--64
-[]\T1/cmr/m/n/10 BDOT10k (wszyst-kie
+Underfull \hbox (badness 5050) in paragraph at lines 68--68
+[]|\T1/cmr/m/n/10 BDOT10k (wszyst-kie
  []
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [1
 
 {C:/Users/adria/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 73.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 77.
  (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
 File: t1cmtt.fd 2022/07/10 v2.5l Standard LaTeX font definitions
-) [2] [3] (sprawozdanie.aux)
+) [2] [3]
+<img/kryterium1-wykres-pierwszy.png, id=217, 399.237pt x 198.414pt>
+File: img/kryterium1-wykres-pierwszy.png Graphic file (type png)
+<use img/kryterium1-wykres-pierwszy.png>
+Package pdftex.def Info: img/kryterium1-wykres-pierwszy.png  used on input line 119.
+(pdftex.def)             Requested size: 217.42265pt x 108.05324pt.
+<img/kryterium1-wykres-drugi.png, id=218, 400.989pt x 198.633pt>
+File: img/kryterium1-wykres-drugi.png Graphic file (type png)
+<use img/kryterium1-wykres-drugi.png>
+Package pdftex.def Info: img/kryterium1-wykres-drugi.png  used on input line 124.
+(pdftex.def)             Requested size: 217.42265pt x 107.70271pt.
+<img/kryterium1-wykres-glowny.png, id=219, 371.862pt x 213.306pt>
+File: img/kryterium1-wykres-glowny.png Graphic file (type png)
+<use img/kryterium1-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium1-wykres-glowny.png  used on input line 131.
+(pdftex.def)             Requested size: 339.72592pt x 194.88014pt.
+ [4 <./img/kryterium1-wykres-pierwszy.png> <./img/kryterium1-wykres-drugi.png> <./img/kryterium1-wykres-glowny.png>]
+<img/kryterium2-wykres-glowny.png, id=235, 426.831pt x 198.414pt>
+File: img/kryterium2-wykres-glowny.png Graphic file (type png)
+<use img/kryterium2-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium2-wykres-glowny.png  used on input line 149.
+(pdftex.def)             Requested size: 339.72592pt x 157.9291pt.
+ [5 <./img/kryterium2-wykres-glowny.png>]
+<img/kryterium3-wykres-glowny.png, id=248, 407.778pt x 198.414pt>
+File: img/kryterium3-wykres-glowny.png Graphic file (type png)
+<use img/kryterium3-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium3-wykres-glowny.png  used on input line 168.
+(pdftex.def)             Requested size: 339.72592pt x 165.31026pt.
+ [6 <./img/kryterium3-wykres-glowny.png>]
+<img/kryterium4-wykres-glowny.png, id=261, 402.96pt x 198.414pt>
+File: img/kryterium4-wykres-glowny.png Graphic file (type png)
+<use img/kryterium4-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium4-wykres-glowny.png  used on input line 202.
+(pdftex.def)             Requested size: 339.72592pt x 167.28423pt.
+ [7 <./img/kryterium4-wykres-glowny.png>]
+<img/kryterium5-wykres-glowny.png, id=291, 353.028pt x 198.414pt>
+File: img/kryterium5-wykres-glowny.png Graphic file (type png)
+<use img/kryterium5-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium5-wykres-glowny.png  used on input line 219.
+(pdftex.def)             Requested size: 339.72592pt x 190.95058pt.
+ [8 <./img/kryterium5-wykres-glowny.png>]
+<img/kryterium6-wykres-pierwszy.png, id=302, 335.946pt x 194.91pt>
+File: img/kryterium6-wykres-pierwszy.png Graphic file (type png)
+<use img/kryterium6-wykres-pierwszy.png>
+Package pdftex.def Info: img/kryterium6-wykres-pierwszy.png  used on input line 239.
+(pdftex.def)             Requested size: 217.42265pt x 126.14574pt.
+<img/kryterium6-wykres-drugi.png, id=303, 335.946pt x 194.691pt>
+File: img/kryterium6-wykres-drugi.png Graphic file (type png)
+<use img/kryterium6-wykres-drugi.png>
+Package pdftex.def Info: img/kryterium6-wykres-drugi.png  used on input line 244.
+(pdftex.def)             Requested size: 217.42265pt x 126.00398pt.
+<img/kryterium6-wykres-glowny.png, id=304, 353.247pt x 194.691pt>
+File: img/kryterium6-wykres-glowny.png Graphic file (type png)
+<use img/kryterium6-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium6-wykres-glowny.png  used on input line 251.
+(pdftex.def)             Requested size: 339.72592pt x 187.25175pt.
+ [9 <./img/kryterium6-wykres-pierwszy.png> <./img/kryterium6-wykres-drugi.png> <./img/kryterium6-wykres-glowny.png>]
+<img/kryterium7-wykres-glowny.png, id=320, 325.215pt x 194.472pt>
+File: img/kryterium7-wykres-glowny.png Graphic file (type png)
+<use img/kryterium7-wykres-glowny.png>
+Package pdftex.def Info: img/kryterium7-wykres-glowny.png  used on input line 267.
+(pdftex.def)             Requested size: 339.72592pt x 203.16302pt.
+ [10 <./img/kryterium7-wykres-glowny.png>] [11]
+Underfull \hbox (badness 3849) in paragraph at lines 367--367
+[]|\T1/cmr/bx/n/10 Kod klasy
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--367
+\T1/cmr/bx/n/10 obiek-tów
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--367
+[]|\T1/cmr/bx/n/10 Nazwa klasy obiek-tów
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--368
+[]|\T1/cmr/bx/n/10 Koszt
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 377--377
+[]|\T1/cmr/m/n/10 przemysªowo-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 388--388
+[]|\T1/cmr/m/n/10 PTUT04,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 399--399
+[]|\T1/cmr/m/n/10 PTGN01,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 399--399
+\T1/cmr/m/n/10 PTGN02,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 399--399
+\T1/cmr/m/n/10 PTGN03,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 403--403
+[]|\T1/cmr/m/n/10 PTSO01,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 405--405
+[]|\T1/cmr/m/n/10 PTWZ01,
+ []
+
+
+Underfull \hbox (badness 2846) in paragraph at lines 407--407
+[]|\T1/cmr/m/n/10 pozostaªy te-ren nie-za-bu-do-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 407--407
+[]|\T1/cmr/m/n/10 PTNZ01,
+ []
+
+[12] [13] [14] (sprawozdanie.aux)
 Package rerunfilecheck Info: File `sprawozdanie.out' has not changed.
-(rerunfilecheck)             Checksum: FCCB202BE7668581851DE46C6CFC2781;3015.
+(rerunfilecheck)             Checksum: 308AB1C02B38466645A40825213BF2CD;6580.
  ) 
 Here is how much of TeX's memory you used:
- 14437 strings out of 476339
- 230167 string characters out of 5788119
- 2121340 words of memory out of 5000000
- 34629 multiletter control sequences out of 15000+600000
+ 15037 strings out of 476339
+ 241899 string characters out of 5788119
+ 2198340 words of memory out of 5000000
+ 34993 multiletter control sequences out of 15000+600000
  523698 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,77p,425b,1300s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt0900.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0500.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on sprawozdanie.pdf (3 pages, 123057 bytes).
+ 75i,11n,77p,664b,2132s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt0900.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0500.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk><C:/Users/adria/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on sprawozdanie.pdf (14 pages, 692042 bytes).
 PDF statistics:
- 488 PDF objects out of 1000 (max. 8388607)
- 62 named destinations out of 1000 (max. 500000)
- 209 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 908 PDF objects out of 1000 (max. 8388607)
+ 275 named destinations out of 1000 (max. 500000)
+ 392 words of extra memory for PDF output out of 10000 (max. 10000000)
 

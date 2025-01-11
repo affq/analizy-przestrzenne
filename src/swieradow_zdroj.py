@@ -26,7 +26,7 @@ linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f
 #kryterium 1
 out_distance_accumulation_raster = arcpy.sa.DistanceAccumulation(in_source_data=water)
 woda_rosnaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 100 102")
-woda_malejaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 400 200")
+woda_malejaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 1000 500")
 woda_mapa = arcpy.sa.FuzzyOverlay([woda_rosnaca, woda_malejaca], 'AND')
 woda_mapa.save(f'{geobaza}\\kryterium_1')
 
@@ -34,14 +34,14 @@ woda_mapa.save(f'{geobaza}\\kryterium_1')
 query = "FOBUD = 'budynki mieszkalne'"
 arcpy.analysis.Select(budynki, 'budynki_mieszkalne', query)
 out_distance_accumulation_buildings = arcpy.sa.DistanceAccumulation(in_source_data='budynki_mieszkalne')
-budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 1000")
+budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 250")
 budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
 
 #kryterium 3
 query = "RODZAJ = 'las'"
 arcpy.analysis.Select(ptlz, 'ptlz_las', query)
 out_distance_accumulation_ptlz = arcpy.sa.DistanceAccumulation(in_source_data="ptlz_las")
-lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 100")
+lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 40")
 lasy_fuzzy.save(f'{geobaza}\\kryterium_3')
 
 #kryterium 4 
@@ -53,31 +53,35 @@ density = arcpy.sa.LineDensity(
     population_field=None,
     cell_size=5,
     search_radius=1000,
-    area_unit_scale_factor="SQUARE_METERS",
+    area_unit_scale_factor="SQUARE_KILOMETERS",
 )
+density.save(f'{geobaza}\\drogi_density')
+
+arcpy.management.CalculateStatistics(density)
+max_value = density.maximum
 
 kryterium_4 = arcpy.sa.RescaleByFunction(
     in_raster=density,
-    transformation_function="LINEAR 0 1",
-    from_scale=0,
-    to_scale=1   
+    transformation_function=f"PIECEWISE 0 1 CONSTANT 0 1 3 LINEAR 0 1 3 {max_value} CONSTANT 1",
+    from_scale=1,
+    to_scale=0   
 )
 kryterium_4.save(f'{geobaza}\\kryterium_4')
 
 #kryterium 5
 arcpy.ddd.Slope(nmt, "slope", "PERCENT_RISE", 1)
-slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 1")
+slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 20 8")
 slope_fuzzy.save(f'{geobaza}\\kryterium_5')
 
 #kryterium 6
 aspect = arcpy.ddd.Aspect(nmt)
 aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 135")
-aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 235")
+aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 225")
 aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
 aspect_overlay.save(f'{geobaza}\\kryterium_6')
 
 #kryterium 7 - wezly
-wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function="LINEAR 4000 1000")
+wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function="LINEAR 6000 3000")
 wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
 
 def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci):
@@ -85,7 +89,7 @@ def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, wa
     weighted_sum = arcpy.sa.WeightedSum(tabela_kryteriow)
     weighted_sum.save(f'{geobaza}\\{wariant}_suma_rozmyte')
 
-    kryteria_ostre = arcpy.sa.FuzzyOverlay([f"{geobaza}\\kryterium_1", f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
+    kryteria_ostre = arcpy.sa.FuzzyOverlay([woda_rosnaca, f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
     kryteria_ostre.save(f'{geobaza}\\kryteria_ostre')
 
     suma = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
@@ -210,7 +214,6 @@ def stworz_przylacze(wariant, prog_przydatnosci):
         force_flow_direction_convention="INPUT_RANGE"
     )
     out_path.save(f"{geobaza}\\{wariant}_cost_path")
-
     path_vector = arcpy.conversion.RasterToPolyline(in_raster=out_path, out_polyline_features=f"{geobaza}\\{wariant}_cost_path_vector")
 
 def licz(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci_piksela, prog_przydatnosci_powierzchni):
