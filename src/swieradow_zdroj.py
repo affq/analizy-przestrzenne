@@ -2,8 +2,8 @@ import arcpy.analysis
 import arcpy.management
 import arcpy.sa
 
-geobaza = r"C:/Users/adria/OneDrive/Pulpit/analizy-przestrzenne/MyProject12/MyProject12.gdb"
-# geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
+# geobaza = r"C:/Users/adria/OneDrive/Pulpit/analizy-przestrzenne/MyProject12/MyProject12.gdb"
+geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
 arcpy.env.workspace = "in_memory"
 # arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRF2000-PL_CS92")

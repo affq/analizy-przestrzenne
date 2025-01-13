@@ -102,17 +102,9 @@ linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f
 \end{lstlisting}
 \newpage
 \subsection{Kryterium 1: odległość od rzek i zbiorników wodnych}
-\subsubsection{Kod}
-\begin{lstlisting}
-out_distance_accumulation_raster = arcpy.sa.DistanceAccumulation(in_source_data=water)
-woda_rosnaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 100 102")
-woda_malejaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 1000 500")
-woda_mapa = arcpy.sa.FuzzyOverlay([woda_rosnaca, woda_malejaca], 'AND')
-woda_mapa.save(f'{geobaza}\\kryterium_1')
-\end{lstlisting}
 
 \subsubsection{Opis działania}
-
+* dodaj tu coś *
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.48\textwidth}
@@ -126,15 +118,44 @@ woda_mapa.save(f'{geobaza}\\kryterium_1')
         \caption*{}
     \end{minipage}
 \end{figure}
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium1-wykres-glowny.png}
     \caption*{Reklasyfikacja dla kryterium 1.}
 \end{figure}
+
+\subsubsection{Kod}
+\begin{lstlisting}
+out_distance_accumulation_raster = arcpy.sa.DistanceAccumulation(in_source_data=water)
+woda_rosnaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 100 102")
+woda_malejaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 1000 500")
+woda_mapa = arcpy.sa.FuzzyOverlay([woda_rosnaca, woda_malejaca], 'AND')
+woda_mapa.save(f'{geobaza}\\kryterium_1')
+\end{lstlisting}
+
 \subsubsection{Wynik}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium1-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 1.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium1-woda.jpg}
+    \caption*{Mapa przydatności dla kryterium 1. zawierająca rzeki oraz zbiorniki wodne}
+\end{figure}
+
+
 \newpage
 \subsection{Kryterium 2: odległość od budynków mieszkalnych}
+\subsubsection{Opis działania}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium2-wykres-glowny.png}
+    \caption*{Reklasyfikacja dla kryterium 2.}
+\end{figure}
+
 \subsubsection{Kod}
 \begin{lstlisting}
 query = "FOBUD = 'budynki mieszkalne'"
@@ -144,16 +165,29 @@ budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_building
 budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
 \end{lstlisting}
 
+\subsubsection{Wynik}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium2-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 2.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium2-budynki.jpg}
+    \caption*{Mapa przydatności dla kryterium 2. zawierająca budynki mieszkalne}
+\end{figure}
+
+
+\newpage
+\subsection{Kryterium 3: pokrycie terenu}
 \subsubsection{Opis działania}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/kryterium2-wykres-glowny.png}
-    \caption*{Reklasyfikacja dla kryterium 2.}
+    \includegraphics[width=0.75\textwidth]{img/kryterium3-wykres-glowny.png}
+    \caption*{Reklasyfikacja dla kryterium 3.}
 \end{figure}
 
-\subsubsection{Wynik}
-\newpage
-\subsection{Kryterium 3: pokrycie terenu}
 \subsubsection{Kod}
 \begin{lstlisting}
 query = "RODZAJ = 'las'"
@@ -163,15 +197,28 @@ lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_func
 lasy_fuzzy.save(f'{geobaza}\\kryterium_3')
 \end{lstlisting}
 
+\subsubsection{Wynik}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium3-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 3.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium3-lasy.jpg}
+    \caption*{Mapa przydatności dla kryterium 3. zawierająca lasy}
+\end{figure}
+
+\newpage
+\subsection{Kryterium 4: dostęp do dróg utwardzonych}
 \subsubsection{Opis działania}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/kryterium3-wykres-glowny.png}
-    \caption*{Reklasyfikacja dla kryterium 3.}
+    \includegraphics[width=0.75\textwidth]{img/kryterium4-wykres-glowny.png}
+    \caption*{Reklasyfikacja dla kryterium 4.}
 \end{figure}
-\subsubsection{Wynik}
-\newpage
-\subsection{Kryterium 4: dostęp do dróg utwardzonych}
+
 \subsubsection{Kod}
 \begin{lstlisting}
 query = "MATE\_NAWIE IN ('beton', 'bruk', 'kostka kamienna', 'kostka prefabrykowana', 'masa bitumiczna', 'plyty betonowe')"
@@ -198,16 +245,28 @@ kryterium_4 = arcpy.sa.RescaleByFunction(
 kryterium_4.save(f'{geobaza}\\kryterium_4')
 \end{lstlisting}
 
+\subsubsection{Wynik}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium4-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 4.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium4-drogi.jpg}
+    \caption*{Mapa przydatności dla kryterium 4. zawierająca drogi utwardzone}
+\end{figure}
+
+\newpage
+\subsection{Kryterium 5: nachylenie stoków}
 \subsubsection{Opis działania}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/kryterium4-wykres-glowny.png}
-    \caption*{Reklasyfikacja dla kryterium 4.}
+    \includegraphics[width=0.75\textwidth]{img/kryterium5-wykres-glowny.png}
+    \caption*{Reklasyfikacja dla kryterium 5.}
 \end{figure}
 
-\subsubsection{Wynik}
-\newpage
-\subsection{Kryterium 5: nachylenie stoków}
 \subsubsection{Kod}
 \begin{lstlisting}
 arcpy.ddd.Slope(nmt, "slope", "PERCENT_RISE", 1)
@@ -215,24 +274,21 @@ slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 7")
 slope_fuzzy.save(f'{geobaza}\\kryterium_5')
 \end{lstlisting}
 
-\subsubsection{Opis działania}
+\subsubsection{Wynik}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/kryterium5-wykres-glowny.png}
-    \caption*{Reklasyfikacja dla kryterium 5.}
+    \includegraphics[width=0.75\textwidth]{img/kryterium5-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 5.}
 \end{figure}
-\subsubsection{Wynik}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium5-stoki.jpg}
+    \caption*{Mapa nachyleń stoków wykorzystana podczas sprawdzania kryterium 5.}
+\end{figure}
+
 \newpage
 \subsection{Kryterium 6: dostęp do światła słonecznego}
-\subsubsection{Kod}
-\begin{lstlisting}
-aspect = arcpy.ddd.Aspect(nmt)
-aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 135")
-aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 225")
-aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
-aspect_overlay.save(f'{geobaza}\\kryterium_6')
-\end{lstlisting}
-
 \subsubsection{Opis działania}
 \begin{figure}[H]
     \centering
@@ -254,16 +310,32 @@ aspect_overlay.save(f'{geobaza}\\kryterium_6')
     \caption*{Reklasyfikacja dla kryterium 6.}
 \end{figure}
 
-\subsubsection{Wynik}
-\newpage
-\subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
+
 \subsubsection{Kod}
 \begin{lstlisting}
-wezly_max = float(arcpy.management.GetRasterProperties(wezly, "MAXIMUM")[0].replace(',', '.'))
-wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {0.7 * wezly_max} {0.3 * wezly_max}")
-wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
+aspect = arcpy.ddd.Aspect(nmt)
+aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 135")
+aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 225")
+aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
+aspect_overlay.save(f'{geobaza}\\kryterium_6')
 \end{lstlisting}
 
+\subsubsection{Wynik}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium6-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 6.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium6-aspect.jpg}
+    \caption*{Mapa przydatności dla kryterium 6. zawierająca stopień wystawy słonecznej}
+\end{figure}
+
+
+\newpage
+\subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
 \subsubsection{Opis działania}
 \begin{figure}[H]
     \centering
@@ -271,15 +343,36 @@ wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
     \caption*{Reklasyfikacja dla kryterium 7.}
 \end{figure}
 
+
+\subsubsection{Kod}
+\begin{lstlisting}
+wezly_max = float(arcpy.management.GetRasterProperties(wezly, "MAXIMUM")[0].replace(',', '.'))
+wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {0.7 * wezly_max} {0.3 * wezly_max}")
+wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
+\end{lstlisting}
+
 \subsubsection{Wynik}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.75\textwidth]{img/interfejs.png}
-%     \caption*{}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium7-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 7.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/kryterium7-wezly.jpg}
+    \caption*{Mapa odległości od węzłów}
+\end{figure}
 
 \subsection{Ocena przydatności terenu}
+\subsubsection{Opis działania}
+Powyższy kod najpierw tworzy tabelę zawierającą wagi dla każdego z kryteriów, zmienne w zależności od wariantu. Następnie tworzy sumę ważoną dla wszystkich z kryteriów.
+
+Później brane są pod uwagę kryteria ostre, tj. 100-metrowa strefa ochronna od wód, 150-metrowa odległość od budynków mieszkalnych oraz 15-metrowa odległość od lasów. Zostaje utworzony raster, który w pikselu, dla którego przydatność dla któregokolwiek z kryterium wyniosła 0, przyjmuje również przydatność równą 0. Dzięki temu miejsca wyeliminowane przez którekolwiek z kryteriów ostrych nie będą brane pod uwagę przy wyborze lokalizacji farmy. 
+
+Następnie zostaje utworzona suma warstwy kryteriów ostrych i rozmytych. Piksele z przydatnością powyżej progu przydatności zostały zremapowane na 1, pozostałe na 0.
+
 \subsubsection{Kod}
 \begin{lstlisting}
 tabela_kryteriow = arcpy.sa.WSTable([[f'{geobaza}\\kryterium_1', "VALUE", waga_woda], [f'{geobaza}\\kryterium_2', "VALUE", waga_budynki], [f'{geobaza}\\kryterium_3', "VALUE", waga_lasy], [f'{geobaza}\\kryterium_4', "VALUE", waga_drogi], [f'{geobaza}\\kryterium_5', "VALUE", waga_wysokosc], [f'{geobaza}\\kryterium_6', "VALUE", waga_aspect], [f'{geobaza}\\kryterium_7', "VALUE", waga_wezly]])
@@ -296,14 +389,41 @@ wynik_reclassified = arcpy.sa.Reclassify(suma, "VALUE", arcpy.sa.RemapRange([[0,
 wynik_reclassified.save(f'{geobaza}\\{wariant}_wynik_reclassified')
 \end{lstlisting}
 
-\subsubsection{Opis działania}
-Powyższy kod najpierw tworzy tabelę zawierającą wagi dla każdego z kryteriów, zmienne w zależności od wariantu. Następnie tworzy sumę ważoną dla wszystkich z kryteriów.
+\subsubsection{Wynik}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/rozmyte-layout.jpg}
+    \caption*{Suma kryteriów rozmytych}
+\end{figure}
 
-Później brane są pod uwagę kryteria ostre, tj. 100-metrowa strefa ochronna od wód, 150-metrowa odległość od budynków mieszkalnych oraz 15-metrowa odległość od lasów. Zostaje utworzony raster, który w pikselu, dla którego przydatność dla któregokolwiek z kryterium wyniosła 0, przyjmuje również przydatność równą 0. Dzięki temu miejsca wyeliminowane przez którekolwiek z kryteriów ostrych nie będą brane pod uwagę przy wyborze lokalizacji farmy. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/ostre-layout.jpg}
+    \caption*{Suma kryteriów ostrych}
+\end{figure}
 
-Następnie zostaje utworzona suma warstwy kryteriów ostrych i rozmytych. Piksele z przydatnością powyżej progu przydatności zostały zremapowane na 1, pozostałe na 0.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/wynik.jpg}
+    \caption*{Wynik łączenia kryteriów ostrych i rozmytych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/wynik-po-reklasyfikacji.jpg}
+    \caption*{Wynik łączenia kryteriów ostrych i rozmytych po reklasyfikacji}
+\end{figure}
+
 
 \subsection{Wybór przydatnych działek}
+\subsubsection{Opis działania}
+Kod najpierw zamienia uzyskany wcześniej raster na warstwę poligonową. Następnie zostają wybrane tylko te poligony, które stanowią teren przydatny.
+
+Później warstwa z działkami zostaje przecięta powstałymi poligonami. Dzięki temu działka zostaje podzielona na części przydatne i nieprzydatne. Kolejno, aby uzyskać procentową przydatność każdej z działek, pętla przechodzi przez warstwę z działkami przeciętymi oraz pierwotną warstwę z działkami. 
+Jeżeli pętla natrafi na część przydatną działki, zostaje znaleziona odpowiednia działka w warstwie pierwotnej, i pole części przydatnej działki zostaje dodane do pola pole\_przydatne.
+
+Dzięki temu możemy obliczyć przydatność działki - stosunek powierzchni przydatnej do powierzchni całkowitej. Wybieramy jedynie te działki, których przydatność jest wyższa od wybranego progu przydatności oraz takie, które mają powierzchnię co najmniej 2ha.
+
 \subsubsection{Kod}
 \begin{lstlisting}
 poligon_przydatnosci = "poligon_przydatnosci"
@@ -345,74 +465,84 @@ arcpy.management.SelectLayerByAttribute(dzialki_layer, "NEW_SELECTION", f"przyda
 arcpy.management.CopyFeatures(dzialki_layer, f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}")
 \end{lstlisting}
 
-\subsubsection{Opis działania}
-Kod najpierw zamienia uzyskany wcześniej raster na warstwę poligonową. Następnie zostają wybrane tylko te poligony, które stanowią teren przydatny.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/przydatne-dzialki.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki}
+\end{figure}
 
-Później warstwa z działkami zostaje przecięta powstałymi poligonami. Dzięki temu działka zostaje podzielona na części przydatne i nieprzydatne. Kolejno, aby uzyskać procentową przydatność każdej z działek, pętla przechodzi przez warstwę z działkami przeciętymi oraz pierwotną warstwę z działkami. 
-Jeżeli pętla natrafi na część przydatną działki, zostaje znaleziona odpowiednia działka w warstwie pierwotnej, i pole części przydatnej działki zostaje dodane do pola pole\_przydatne.
-
-Dzięki temu możemy obliczyć przydatność działki - stosunek powierzchni przydatnej do powierzchni całkowitej. Wybieramy jedynie te działki, których przydatność jest wyższa od wybranego progu przydatności oraz takie, które mają powierzchnię co najmniej 2ha.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/dzialki-przydatne-ortofoto.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki na ortofotomapie}
+\end{figure}
 
 \subsection{Koszt przyłącza do sieci SN}
 \subsubsection{Opis działania}
 Przed rozpoczęciem analiz należało stworzyć tzw. mapę kosztów względnych(jednostkowych), która przedstawia faktyczną lub umowną wartość kosztu zbudowania
 przyłącza przez dany obszar. Dla mapy kosztów względnych w postaci rastrowej, będzie to względny koszt budowy przyłącza na obszarze o powierzchni odpowiadającej rozmiarowi
 piksela. W ćwiczeniu przyjęto, że koszt = 1 jest odniesiony do obszarów rolniczych (najmniejszy koszt prac ziemnych / budowlanych dla 1 piksela). Koszty względne dla innych obszarów są obliczane jako wielokrotność kosztów dla terenów rolniczych. Przypisane koszty dla wszystkich kategorii użytkowania terenu dla doprowadzenia do
-farmy przyłącza przedstawia Tabela 2.
+farmy przyłącza przedstawia tabela.
 
 Następnie, dla każdego obiektu połączonej warstwy zawierającej pokrycie terenu gminy dodano odpowiedni koszt, na podstawie pola x\_kod, mówiącego o typie terenu, jaki stanowi. Warstwę nastepnie zamieniamy na raster, wykorzystując do tego nowo dodane pole z kosztem. Tworzymy mapę kosztów skumulowanych (cost map) oraz mapę kierunków (backlink raster) z użyciem narzędzia Cost Distance. Wykorzystując utworzone mapy, tworzymy ścieżkę przyłącza o najmniejszym koszcie (cost path). Rastrowa ścieżka zostaje przekonwertowana na warstwę wektorową.
 
-\begin{table}[ht]
-    \centering % Wyśrodkowanie tabeli
-    \renewcommand{\arraystretch}{1.2} % Zwiększenie odstępów między wierszami
-    \begin{tabular}{|p{2cm}|p{4.5cm}|p{2cm}|p{3cm}|p{2cm}|}
-    \hline
-    \textbf{Kod klasy obiektów BDOT} & \textbf{Nazwa klasy obiektów BDOT} & \textbf{X\_kod} & \textbf{Typ obiektu} & \textbf{Koszt względny} \\
-    \hline
-    PTWP & woda powierzchniowa & PTWP01 & woda morska & 0 $\rightarrow$ NoData \\ \cline{3-5}
-    & & PTWP02 & woda płynąca & 200 \\ \cline{3-5}
-    & & PTWP03 & woda stojąca & 0 $\rightarrow$ NoData \\ 
-    \hline
-    PTZB & zabudowa & PTZB02 & jednorodzinna & 100 \\ \cline{3-5}
-    & & PTZB01 & wielorodzinna & 200 \\ \cline{3-5}
-    & & PTZB05 & pozostała \newline zabudowa & 50 \\ \cline{3-5}
-    & & PTZB04 & handlowo-usługowa & 200 \\ \cline{3-5}
-    & & PTZB03 & przemysłowo-składowa & 200 \\ 
-    \hline
-    PTLZ & teren leśny i zadrzewiony & PTLZ01 & las & 100 \\ \cline{3-5}
-    & & PTLZ02 & zagajnik & 50 \\ \cline{3-5}
-    & & PTLZ03 & zadrzewienie & 50 \\ 
-    \hline
-    PTRK & roślinność krzewiasta & PTRK01 & kępy krzewów & 20 \\ \cline{3-5}
-    & & PTRK02 & krzewy & 15 \\ 
-    \hline
-    PTUT & uprawa trwała & PTUT03 & sad & 100 \\ \cline{3-5}
-    & & PTUT02 & plantacja & 90 \\ \cline{3-5}
-    & & PTUT04, PTUT05 & inne & 20 \\ \cline{3-5}
-    & & PTUT01 & ogród działkowy & 0 $\rightarrow$ NoData \\ 
-    \hline
-    PTTR & roślinność trawiasta i uprawa rolna & PTTR02 & grunt orny & 1 \\ \cline{3-5}
-    & & PTTR01 & roślinność \newline trawiasta & 20 \\ 
-    \hline
-    PTKM & teren pod drogami kołowymi, szynowymi i lotniskowymi & PTKM02 & torowisko & 200 \\ \cline{3-5}
-    & & PTKM01 & droga kołowa & 200 \\ \cline{3-5}
-    & & PTKM03 & teren pod drogą \newline kołową \newline i torowiskiem & 200 \\ \cline{3-5}
-    & & PTKM04 & teren pod drogą \newline lotniskową & 0 $\rightarrow$ NoData \\ 
-    \hline
-    PTGN & grunt nieużytkowany & PTGN01, PTGN02, PTGN03, PTGN04 & - & 1 \\ 
-    \hline
-    PTPL & plac & PTPL01 & - & 50 \\ 
-    \hline
-    PTSO & składowisko odpadów & PTSO01, PTSO02 & - & 0 $\rightarrow$ NoData \\ 
-    \hline
-    PTWZ & wyrobisko i zwałowisko & PTWZ01, PTWZ02 & - & 0 $\rightarrow$ NoData \\ 
-    \hline
-    PTNZ & pozostały teren niezabudowany & PTNZ01, PTNZ02 & - & 150 \\ 
-    \hline
-    \end{tabular}
-    \caption{Tabela kosztów względnych dla różnych typów obiektów BDOT.}
-    \label{tab:bdot_costs}
-\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/cost-raster.jpg}
+    \caption*{Mapa kosztów względnych}
+\end{figure}
+
+% \begin{table}[ht]
+%     \centering % Wyśrodkowanie tabeli
+%     \renewcommand{\arraystretch}{1.2} % Zwiększenie odstępów między wierszami
+%     \begin{tabular}{|p{2cm}|p{4.5cm}|p{2cm}|p{3cm}|p{2cm}|}
+%     \hline
+%     \textbf{Kod klasy obiektów BDOT} & \textbf{Nazwa klasy obiektów BDOT} & \textbf{X\_kod} & \textbf{Typ obiektu} & \textbf{Koszt względny} \\
+%     \hline
+%     PTWP & woda powierzchniowa & PTWP01 & woda morska & 0 $\rightarrow$ NoData \\ \cline{3-5}
+%     & & PTWP02 & woda płynąca & 200 \\ \cline{3-5}
+%     & & PTWP03 & woda stojąca & 0 $\rightarrow$ NoData \\ 
+%     \hline
+%     PTZB & zabudowa & PTZB02 & jednorodzinna & 100 \\ \cline{3-5}
+%     & & PTZB01 & wielorodzinna & 200 \\ \cline{3-5}
+%     & & PTZB05 & pozostała \newline zabudowa & 50 \\ \cline{3-5}
+%     & & PTZB04 & handlowo-usługowa & 200 \\ \cline{3-5}
+%     & & PTZB03 & przemysłowo-składowa & 200 \\ 
+%     \hline
+%     PTLZ & teren leśny i zadrzewiony & PTLZ01 & las & 100 \\ \cline{3-5}
+%     & & PTLZ02 & zagajnik & 50 \\ \cline{3-5}
+%     & & PTLZ03 & zadrzewienie & 50 \\ 
+%     \hline
+%     PTRK & roślinność krzewiasta & PTRK01 & kępy krzewów & 20 \\ \cline{3-5}
+%     & & PTRK02 & krzewy & 15 \\ 
+%     \hline
+%     PTUT & uprawa trwała & PTUT03 & sad & 100 \\ \cline{3-5}
+%     & & PTUT02 & plantacja & 90 \\ \cline{3-5}
+%     & & PTUT04, PTUT05 & inne & 20 \\ \cline{3-5}
+%     & & PTUT01 & ogród działkowy & 0 $\rightarrow$ NoData \\ 
+%     \hline
+%     PTTR & roślinność trawiasta i uprawa rolna & PTTR02 & grunt orny & 1 \\ \cline{3-5}
+%     & & PTTR01 & roślinność \newline trawiasta & 20 \\ 
+%     \hline
+%     PTKM & teren pod drogami kołowymi, szynowymi i lotniskowymi & PTKM02 & torowisko & 200 \\ \cline{3-5}
+%     & & PTKM01 & droga kołowa & 200 \\ \cline{3-5}
+%     & & PTKM03 & teren pod drogą \newline kołową \newline i torowiskiem & 200 \\ \cline{3-5}
+%     & & PTKM04 & teren pod drogą \newline lotniskową & 0 $\rightarrow$ NoData \\ 
+%     \hline
+%     PTGN & grunt nieużytkowany & PTGN01, PTGN02, PTGN03, PTGN04 & - & 1 \\ 
+%     \hline
+%     PTPL & plac & PTPL01 & - & 50 \\ 
+%     \hline
+%     PTSO & składowisko odpadów & PTSO01, PTSO02 & - & 0 $\rightarrow$ NoData \\ 
+%     \hline
+%     PTWZ & wyrobisko i zwałowisko & PTWZ01, PTWZ02 & - & 0 $\rightarrow$ NoData \\ 
+%     \hline
+%     PTNZ & pozostały teren niezabudowany & PTNZ01, PTNZ02 & - & 150 \\ 
+%     \hline
+%     \end{tabular}
+%     \caption{Tabela kosztów względnych dla różnych typów obiektów BDOT.}
+%     \label{tab:bdot_costs}
+% \end{table}
 
 \subsubsection{Kod}
 \begin{lstlisting}
@@ -496,5 +626,121 @@ out_path.save(f"{geobaza}\\{wariant}_cost_path")
 path_vector = arcpy.conversion.RasterToPolyline(in_raster=out_path, out_polyline_features=f"{geobaza}\\{wariant}_cost_path_vector")
 \end{lstlisting}
 
+\subsubsection{Wynik}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/cost-backlink.jpg}
+    \caption*{Mapa kierunków (backlink)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/cost-distance.jpg}
+    \caption*{Mapa kosztów skumulowanych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/dzialki-linie.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne}
+\end{figure}
+
+\subsubsection{Ostateczny wybór działki}
+Przez 2 z 3 wybranych działek przechodzi już linia elektroenergetyczna, dlatego możemy wyeliminować jedną z działek - działkę nr III. Do wyboru pozostaje mniejsza działka numer I o powierzchni 2.63 ha, z czego część przydatna to około 79\% powierzchni działki. Działka numer II jest 14.5 raza większa. Jej powierzchnia wynosi 38.15 ha, z czego część przydatna to 59\%.
+
+\section{Test modelu na danych z innego obszaru}
+\subsection{Opis obszaru}
+Stworzony model należało przetestować na innym obszarze. Wybrano do tego celu gminę Pleśna - wiejską gminę w powiecie tarnowskim w województwie małopolskim.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-polozenie.jpg}
+    \caption*{Położenie gminy na mapie województwa małopolskiego}
+\end{figure}
+
+\subsection{Kryterium 1: odległość od rzek i zbiorników wodnych}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium1-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 1.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium1-woda.jpg}
+    \caption*{Mapa przydatności dla kryterium 1. zawierająca rzeki oraz zbiorniki wodne}
+\end{figure}
+
+\subsection{Kryterium 2: odległość od budynków mieszkalnych}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium2-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 2.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium2-budynki.jpg}
+    \caption*{Mapa przydatności dla kryterium 2. zawierająca budynki mieszkalne}
+\end{figure}
+
+\subsection{Kryterium 3: pokrycie terenu}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium3-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 3.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium3-lasy.jpg}
+    \caption*{Mapa przydatności dla kryterium 3. zawierająca lasy}
+\end{figure}
+
+\subsection{Kryterium 4: dostęp do dróg utwardzonych}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium4-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 4.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium4-drogi.jpg}
+    \caption*{Mapa przydatności dla kryterium 4. zawierająca drogi utwardzone}
+\end{figure}
+
+\subsection{Kryterium 5: nachylenie stoków}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium5-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 5.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium5-stoki.jpg}
+    \caption*{Mapa nachyleń stoków wykorzystana podczas sprawdzania kryterium 5.}
+\end{figure}
+
+
+\subsection{Kryterium 6: dostęp do światła słonecznego}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium6-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 6.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium6-aspect.jpg}
+    \caption*{Mapa przydatności dla kryterium 6. zawierająca stopień wystawy słonecznej}
+\end{figure}
+
+\subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
 
 \end{document}
