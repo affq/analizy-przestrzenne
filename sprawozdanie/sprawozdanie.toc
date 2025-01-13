@@ -1,0 +1,43 @@
+\babel@toc {polish}{}\relax 
+\contentsline {section}{\numberline {1}Wybór lokalizacji farmy fotowoltaicznej}{2}{section.1}%
+\contentsline {section}{\numberline {2}Cel i analizowany obszar}{2}{section.2}%
+\contentsline {section}{\numberline {3}Analizowane kryteria}{2}{section.3}%
+\contentsline {section}{\numberline {4}Realizacja}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Ustalenie środowiska pracy i ścieżek do danych}{3}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Kryterium 1: odległość od rzek i zbiorników wodnych}{4}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Kod}{4}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Opis działania}{4}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}Wynik}{4}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}Kryterium 2: odległość od budynków mieszkalnych}{5}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Kod}{5}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Opis działania}{5}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Wynik}{5}{subsubsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.4}Kryterium 3: pokrycie terenu}{6}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Kod}{6}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Opis działania}{6}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}Wynik}{6}{subsubsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.5}Kryterium 4: dostęp do dróg utwardzonych}{7}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Kod}{7}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Opis działania}{7}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Wynik}{7}{subsubsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.6}Kryterium 5: nachylenie stoków}{8}{subsection.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Kod}{8}{subsubsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Opis działania}{8}{subsubsection.4.6.2}%
+\contentsline {subsubsection}{\numberline {4.6.3}Wynik}{8}{subsubsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.7}Kryterium 6: dostęp do światła słonecznego}{9}{subsection.4.7}%
+\contentsline {subsubsection}{\numberline {4.7.1}Kod}{9}{subsubsection.4.7.1}%
+\contentsline {subsubsection}{\numberline {4.7.2}Opis działania}{9}{subsubsection.4.7.2}%
+\contentsline {subsubsection}{\numberline {4.7.3}Wynik}{9}{subsubsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.8}Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}{10}{subsection.4.8}%
+\contentsline {subsubsection}{\numberline {4.8.1}Kod}{10}{subsubsection.4.8.1}%
+\contentsline {subsubsection}{\numberline {4.8.2}Opis działania}{10}{subsubsection.4.8.2}%
+\contentsline {subsubsection}{\numberline {4.8.3}Wynik}{10}{subsubsection.4.8.3}%
+\contentsline {subsection}{\numberline {4.9}Ocena przydatności terenu}{10}{subsection.4.9}%
+\contentsline {subsubsection}{\numberline {4.9.1}Kod}{10}{subsubsection.4.9.1}%
+\contentsline {subsubsection}{\numberline {4.9.2}Opis działania}{11}{subsubsection.4.9.2}%
+\contentsline {subsection}{\numberline {4.10}Wybór przydatnych działek}{11}{subsection.4.10}%
+\contentsline {subsubsection}{\numberline {4.10.1}Kod}{11}{subsubsection.4.10.1}%
+\contentsline {subsubsection}{\numberline {4.10.2}Opis działania}{12}{subsubsection.4.10.2}%
+\contentsline {subsection}{\numberline {4.11}Koszt przyłącza do sieci SN}{12}{subsection.4.11}%
+\contentsline {subsubsection}{\numberline {4.11.1}Opis działania}{12}{subsubsection.4.11.1}%
+\contentsline {subsubsection}{\numberline {4.11.2}Kod}{12}{subsubsection.4.11.2}%

@@ -2,10 +2,11 @@ import arcpy.analysis
 import arcpy.management
 import arcpy.sa
 
-# geobaza = r"C:/Users/adria/OneDrive/Pulpit/studia_foldery/analizy-przestrzenne/MyProject12/MyProject12.gdb"
-geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
+geobaza = r"C:/Users/adria/OneDrive/Pulpit/analizy-przestrzenne/MyProject12/MyProject12.gdb"
+# geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
 arcpy.env.workspace = "in_memory"
-arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
+# arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
+arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRF2000-PL_CS92")
 arcpy.env.extent = f"{geobaza}\\gmina_buffer"
 arcpy.env.mask = f"{geobaza}\\gmina_buffer"
 arcpy.env.cellSize = 5
@@ -34,14 +35,14 @@ woda_mapa.save(f'{geobaza}\\kryterium_1')
 query = "FOBUD = 'budynki mieszkalne'"
 arcpy.analysis.Select(budynki, 'budynki_mieszkalne', query)
 out_distance_accumulation_buildings = arcpy.sa.DistanceAccumulation(in_source_data='budynki_mieszkalne')
-budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 250")
+budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 300")
 budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
 
 #kryterium 3
 query = "RODZAJ = 'las'"
 arcpy.analysis.Select(ptlz, 'ptlz_las', query)
 out_distance_accumulation_ptlz = arcpy.sa.DistanceAccumulation(in_source_data="ptlz_las")
-lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 40")
+lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 100")
 lasy_fuzzy.save(f'{geobaza}\\kryterium_3')
 
 #kryterium 4 
@@ -62,15 +63,15 @@ max_value = density.maximum
 
 kryterium_4 = arcpy.sa.RescaleByFunction(
     in_raster=density,
-    transformation_function=f"PIECEWISE 0 1 CONSTANT 0 1 3 LINEAR 0 1 3 {max_value} CONSTANT 1",
-    from_scale=1,
-    to_scale=0   
+    transformation_function=f"LINEAR {0.3 * max_value} {0.7 * max_value}",
+    from_scale=0,
+    to_scale=1   
 )
 kryterium_4.save(f'{geobaza}\\kryterium_4')
 
 #kryterium 5
 arcpy.ddd.Slope(nmt, "slope", "PERCENT_RISE", 1)
-slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 20 8")
+slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 7")
 slope_fuzzy.save(f'{geobaza}\\kryterium_5')
 
 #kryterium 6
@@ -81,7 +82,8 @@ aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
 aspect_overlay.save(f'{geobaza}\\kryterium_6')
 
 #kryterium 7 - wezly
-wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function="LINEAR 6000 3000")
+wezly_max = float(arcpy.management.GetRasterProperties(wezly, "MAXIMUM")[0].replace(',', '.'))
+wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {0.7 * wezly_max} {0.3 * wezly_max}")
 wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
 
 def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci):
@@ -94,8 +96,11 @@ def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, wa
 
     suma = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
     suma.save(f'{geobaza}\\{wariant}_wynik')
+    arcpy.management.CalculateStatistics(suma)
+    max_przydatnosc = suma.maximum
 
-    wynik_reclassified = arcpy.sa.Reclassify(suma, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci, 0], [prog_przydatnosci, 1, 1]]))
+
+    wynik_reclassified = arcpy.sa.Reclassify(suma, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci * max_przydatnosc, 0], [prog_przydatnosci * max_przydatnosc, 1, 1]]))
     wynik_reclassified.save(f'{geobaza}\\{wariant}_wynik_reclassified')
 
 def wybierz_przydatne_dzialki(wariant, prog_przydatnosci):

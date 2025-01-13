@@ -32,6 +32,7 @@
 \author{Adrian Fabisiewicz (328935)}
 \begin{document}
 \maketitle
+\tableofcontents  % Dodanie spisu treści
 \renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
 \renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}
 \renewcommand{\labelenumiv}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.\arabic{enumiv}}
@@ -139,7 +140,7 @@ woda_mapa.save(f'{geobaza}\\kryterium_1')
 query = "FOBUD = 'budynki mieszkalne'"
 arcpy.analysis.Select(budynki, 'budynki_mieszkalne', query)
 out_distance_accumulation_buildings = arcpy.sa.DistanceAccumulation(in_source_data='budynki_mieszkalne')
-budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 250")
+budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 300")
 budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
 \end{lstlisting}
 
@@ -158,7 +159,7 @@ budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
 query = "RODZAJ = 'las'"
 arcpy.analysis.Select(ptlz, 'ptlz_las', query)
 out_distance_accumulation_ptlz = arcpy.sa.DistanceAccumulation(in_source_data="ptlz_las")
-lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 40")
+lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 100")
 lasy_fuzzy.save(f'{geobaza}\\kryterium_3')
 \end{lstlisting}
 
@@ -173,7 +174,7 @@ lasy_fuzzy.save(f'{geobaza}\\kryterium_3')
 \subsection{Kryterium 4: dostęp do dróg utwardzonych}
 \subsubsection{Kod}
 \begin{lstlisting}
-query = "MATE_NAWIE IN ('beton', 'bruk', 'kostka kamienna', 'kostka prefabrykowana', 'masa bitumiczna', 'plyty betonowe')"
+query = "MATE\_NAWIE IN ('beton', 'bruk', 'kostka kamienna', 'kostka prefabrykowana', 'masa bitumiczna', 'plyty betonowe')"
 drogi_utwardzone = arcpy.analysis.Select(drogi, 'drogi_utwardzone', query)
 
 density = arcpy.sa.LineDensity(
@@ -183,15 +184,16 @@ density = arcpy.sa.LineDensity(
     search_radius=1000,
     area_unit_scale_factor="SQUARE_KILOMETERS",
 )
+density.save(f'{geobaza}\\drogi_density')
 
 arcpy.management.CalculateStatistics(density)
 max_value = density.maximum
 
 kryterium_4 = arcpy.sa.RescaleByFunction(
     in_raster=density,
-    transformation_function=f"PIECEWISE 0 1 CONSTANT 0 1 3 LINEAR 0 1 3 {max_value} CONSTANT 1",
-    from_scale=1,
-    to_scale=0   
+    transformation_function=f"LINEAR {0.3 * max_value} {0.7 * max_value}",
+    from_scale=0,
+    to_scale=1   
 )
 kryterium_4.save(f'{geobaza}\\kryterium_4')
 \end{lstlisting}
@@ -209,7 +211,7 @@ kryterium_4.save(f'{geobaza}\\kryterium_4')
 \subsubsection{Kod}
 \begin{lstlisting}
 arcpy.ddd.Slope(nmt, "slope", "PERCENT_RISE", 1)
-slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 20 8")
+slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 7")
 slope_fuzzy.save(f'{geobaza}\\kryterium_5')
 \end{lstlisting}
 
@@ -257,7 +259,8 @@ aspect_overlay.save(f'{geobaza}\\kryterium_6')
 \subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
 \subsubsection{Kod}
 \begin{lstlisting}
-wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function="LINEAR 6000 3000")
+wezly_max = float(arcpy.management.GetRasterProperties(wezly, "MAXIMUM")[0].replace(',', '.'))
+wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {0.7 * wezly_max} {0.3 * wezly_max}")
 wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
 \end{lstlisting}
 
