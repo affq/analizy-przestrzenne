@@ -75,11 +75,17 @@ Celem projektu było wskazanie optymalnej lokalizacji nowej farmy fotowoltaiczne
 
 \section{Realizacja}
 \subsection{Ustalenie środowiska pracy i ścieżek do danych}
-\begin{lstlisting}
-import arcpy.analysis
-import arcpy.management
-import arcpy.sa
+Na początku pracy z pythonem należało zaimportować odpowiednie moduły z biblioteki arcpy oraz zadbać o to, żeby jako interpreter języka Python została wybrana wersja Pythona instalowana razem z oprogramowaniem ArcGIS.
 
+\begin{lstlisting}
+    import arcpy.analysis
+    import arcpy.management
+    import arcpy.sa
+\end{lstlisting}
+
+Przed rozpoczęciem pracy z danymi należało ustalić odpowiednie parametry środowiska. Ustalono odpowiedni folder odczytu i zapisu danych na geobazę projektu, w której znajdowały się odpowiednie dane. Ustawiono układ współrzędnych na EPSG:2180 oraz rozmiar komórki na 5, zgodny z rozmiarem pobranego przez nas rastra NMT. Zakres oraz maskę projektu dostosowano do powierzchni warstwy, zawierającej ???-metrowy bufor wokół terenu gminy. Ustalono również nadpisywanie warstw w przypadku, jeżeli warstwa o tej samej nazwie już by istniała w folderze.
+
+\begin{lstlisting}
 geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
 arcpy.env.workspace = "in_memory"
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
@@ -87,7 +93,11 @@ arcpy.env.extent = f"{geobaza}\\gmina_buffer"
 arcpy.env.mask = f"{geobaza}\\gmina_buffer"
 arcpy.env.cellSize = 5
 arcpy.env.overwriteOutput = True
+\end{lstlisting}
 
+Następnie zapisano do zmiennych wszystkie niezbędne warstwy do przeprowadzenia analizy oraz, jeżeli było to konieczne, dokonano podstawowych operacji, w celu złączenia danych dla dwóch powiatów.
+
+\begin{lstlisting}
 swrs_0210_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0210', f'{geobaza}\\SWRS_L_0210_buffer', '1 Centimeter')
 swrs_0212_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0212', f'{geobaza}\\SWRS_L_0212_buffer', '1 Centimeter')
 water = arcpy.management.Merge([swrs_0210_buffer, swrs_0212_buffer, f'{geobaza}\\PTWP_A_0210', f'{geobaza}\\PTWP_A_0212'], 'water')
@@ -100,6 +110,7 @@ dzialki = f'{geobaza}\\dzialki'
 pt_merged = f'{geobaza}\\PT_merged'
 linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
 \end{lstlisting}
+
 \newpage
 \subsection{Kryterium 1: odległość od rzek i zbiorników wodnych}
 
@@ -647,7 +658,6 @@ path_vector = arcpy.conversion.RasterToPolyline(in_raster=out_path, out_polyline
 \end{figure}
 
 \subsubsection{Ostateczny wybór działki}
-Przez 2 z 3 wybranych działek przechodzi już linia elektroenergetyczna, dlatego możemy wyeliminować jedną z działek - działkę nr III. Do wyboru pozostaje mniejsza działka numer I o powierzchni 2.63 ha, z czego część przydatna to około 79\% powierzchni działki. Działka numer II jest 14.5 raza większa. Jej powierzchnia wynosi 38.15 ha, z czego część przydatna to 59\%.
 
 \section{Test modelu na danych z innego obszaru}
 \subsection{Opis obszaru}
@@ -742,5 +752,87 @@ Stworzony model należało przetestować na innym obszarze. Wybrano do tego celu
 \end{figure}
 
 \subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium7-layout.jpg}
+    \caption*{Mapa przydatności dla kryterium 7.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-kryterium7-wezly.jpg}
+    \caption*{Mapa odległości od węzłów}
+\end{figure}
+
+\subsection{Ocena przydatności terenu}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-rozmyte-layout.jpg}
+    \caption*{Suma kryteriów rozmytych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-ostre-layout.jpg}
+    \caption*{Suma kryteriów ostrych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-wynik.jpg}
+    \caption*{Wynik łączenia kryteriów ostrych i rozmytych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-wynik-po-reklasyfikacji.jpg}
+    \caption*{Wynik łączenia kryteriów ostrych i rozmytych po reklasyfikacji}
+\end{figure}
+
+\subsection{Wybór przydatnych działek}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-przydatne-dzialki.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-przydatne-ortofoto.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki na ortofotomapie}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-przydatne-ortofoto-2.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki na ortofotomapie}
+\end{figure}
+
+\subsection{Przyłącze do sieci SN}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-cost-raster.jpg}
+    \caption*{Mapa kosztów względnych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-cost-backlink.jpg}
+    \caption*{Mapa kierunków (backlink)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-cost-distance.jpg}
+    \caption*{Mapa kosztów skumulowanych}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-linie.jpg}
+    \caption*{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne}
+\end{figure}
 
 \end{document}

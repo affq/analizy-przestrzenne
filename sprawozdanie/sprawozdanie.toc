@@ -52,4 +52,7 @@
 \contentsline {subsection}{\numberline {5.5}Kryterium 4: dostęp do dróg utwardzonych}{30}{subsection.5.5}%
 \contentsline {subsection}{\numberline {5.6}Kryterium 5: nachylenie stoków}{31}{subsection.5.6}%
 \contentsline {subsection}{\numberline {5.7}Kryterium 6: dostęp do światła słonecznego}{32}{subsection.5.7}%
-\contentsline {subsection}{\numberline {5.8}Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}{32}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.8}Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}{33}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Ocena przydatności terenu}{34}{subsection.5.9}%
+\contentsline {subsection}{\numberline {5.10}Wybór przydatnych działek}{36}{subsection.5.10}%
+\contentsline {subsection}{\numberline {5.11}Przyłącze do sieci SN}{37}{subsection.5.11}%

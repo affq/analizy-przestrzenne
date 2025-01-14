@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.17)  13 JAN 2025 23:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.17)  14 JAN 2025 16:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -495,292 +495,363 @@ Underfull \hbox (badness 5050) in paragraph at lines 69--69
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [2]
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 78.
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 80.
  (C:\Users\adria\AppData\Local\Programs\MiKTeX\tex/latex/base\t1cmtt.fd
 File: t1cmtt.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 ) [3] [4]
-<img/kryterium1-wykres-pierwszy.png, id=324, 371.862pt x 213.306pt>
+<img/kryterium1-wykres-pierwszy.png, id=339, 371.862pt x 213.306pt>
 File: img/kryterium1-wykres-pierwszy.png Graphic file (type png)
 <use img/kryterium1-wykres-pierwszy.png>
-Package pdftex.def Info: img/kryterium1-wykres-pierwszy.png  used on input line 112.
+Package pdftex.def Info: img/kryterium1-wykres-pierwszy.png  used on input line 123.
 (pdftex.def)             Requested size: 217.42265pt x 124.71678pt.
-<img/kryterium1-wykres-drugi.png, id=325, 370.986pt x 213.525pt>
+<img/kryterium1-wykres-drugi.png, id=340, 370.986pt x 213.525pt>
 File: img/kryterium1-wykres-drugi.png Graphic file (type png)
 <use img/kryterium1-wykres-drugi.png>
-Package pdftex.def Info: img/kryterium1-wykres-drugi.png  used on input line 117.
+Package pdftex.def Info: img/kryterium1-wykres-drugi.png  used on input line 128.
 (pdftex.def)             Requested size: 217.42265pt x 125.13805pt.
-<img/kryterium1-wykres-glowny.png, id=326, 371.862pt x 209.583pt>
+<img/kryterium1-wykres-glowny.png, id=341, 371.862pt x 209.583pt>
 File: img/kryterium1-wykres-glowny.png Graphic file (type png)
 <use img/kryterium1-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium1-wykres-glowny.png  used on input line 123.
+Package pdftex.def Info: img/kryterium1-wykres-glowny.png  used on input line 134.
 (pdftex.def)             Requested size: 339.72592pt x 191.47873pt.
-<img/kryterium1-layout.jpg, id=327, 597.432pt x 421.0932pt>
+<img/kryterium1-layout.jpg, id=342, 597.432pt x 421.0932pt>
 File: img/kryterium1-layout.jpg Graphic file (type jpg)
 <use img/kryterium1-layout.jpg>
-Package pdftex.def Info: img/kryterium1-layout.jpg  used on input line 139.
+Package pdftex.def Info: img/kryterium1-layout.jpg  used on input line 150.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [5 <./img/kryterium1-wykres-pierwszy.png> <./img/kryterium1-wykres-drugi.png> <./img/kryterium1-wykres-glowny.png>]
-<img/kryterium1-woda.jpg, id=343, 597.432pt x 421.0932pt>
+<img/kryterium1-woda.jpg, id=358, 597.432pt x 421.0932pt>
 File: img/kryterium1-woda.jpg Graphic file (type jpg)
 <use img/kryterium1-woda.jpg>
-Package pdftex.def Info: img/kryterium1-woda.jpg  used on input line 145.
+Package pdftex.def Info: img/kryterium1-woda.jpg  used on input line 156.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [6 <./img/kryterium1-layout.jpg> <./img/kryterium1-woda.jpg>]
-<img/kryterium2-wykres-glowny.png, id=350, 420.48pt x 266.085pt>
+<img/kryterium2-wykres-glowny.png, id=365, 420.48pt x 266.085pt>
 File: img/kryterium2-wykres-glowny.png Graphic file (type png)
 <use img/kryterium2-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium2-wykres-glowny.png  used on input line 155.
+Package pdftex.def Info: img/kryterium2-wykres-glowny.png  used on input line 166.
 (pdftex.def)             Requested size: 339.72592pt x 214.98767pt.
-<img/kryterium2-layout.jpg, id=351, 597.432pt x 421.0932pt>
+<img/kryterium2-layout.jpg, id=366, 597.432pt x 421.0932pt>
 File: img/kryterium2-layout.jpg Graphic file (type jpg)
 <use img/kryterium2-layout.jpg>
-Package pdftex.def Info: img/kryterium2-layout.jpg  used on input line 171.
+Package pdftex.def Info: img/kryterium2-layout.jpg  used on input line 182.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [7 <./img/kryterium2-wykres-glowny.png>]
-<img/kryterium2-budynki.jpg, id=365, 597.432pt x 421.0932pt>
+<img/kryterium2-budynki.jpg, id=380, 597.432pt x 421.0932pt>
 File: img/kryterium2-budynki.jpg Graphic file (type jpg)
 <use img/kryterium2-budynki.jpg>
-Package pdftex.def Info: img/kryterium2-budynki.jpg  used on input line 177.
+Package pdftex.def Info: img/kryterium2-budynki.jpg  used on input line 188.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [8 <./img/kryterium2-layout.jpg> <./img/kryterium2-budynki.jpg>]
-<img/kryterium3-wykres-glowny.png, id=372, 425.736pt x 259.515pt>
+<img/kryterium3-wykres-glowny.png, id=387, 425.736pt x 259.515pt>
 File: img/kryterium3-wykres-glowny.png Graphic file (type png)
 <use img/kryterium3-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium3-wykres-glowny.png  used on input line 187.
+Package pdftex.def Info: img/kryterium3-wykres-glowny.png  used on input line 198.
 (pdftex.def)             Requested size: 339.72592pt x 207.09352pt.
-<img/kryterium3-layout.jpg, id=373, 597.432pt x 421.0932pt>
+<img/kryterium3-layout.jpg, id=388, 597.432pt x 421.0932pt>
 File: img/kryterium3-layout.jpg Graphic file (type jpg)
 <use img/kryterium3-layout.jpg>
-Package pdftex.def Info: img/kryterium3-layout.jpg  used on input line 203.
+Package pdftex.def Info: img/kryterium3-layout.jpg  used on input line 214.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [9 <./img/kryterium3-wykres-glowny.png>]
-<img/kryterium3-lasy.jpg, id=386, 597.432pt x 421.0932pt>
+<img/kryterium3-lasy.jpg, id=401, 597.432pt x 421.0932pt>
 File: img/kryterium3-lasy.jpg Graphic file (type jpg)
 <use img/kryterium3-lasy.jpg>
-Package pdftex.def Info: img/kryterium3-lasy.jpg  used on input line 209.
+Package pdftex.def Info: img/kryterium3-lasy.jpg  used on input line 220.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [10 <./img/kryterium3-layout.jpg> <./img/kryterium3-lasy.jpg>]
-<img/kryterium4-wykres-glowny.png, id=393, 360.255pt x 198.414pt>
+<img/kryterium4-wykres-glowny.png, id=408, 360.255pt x 198.414pt>
 File: img/kryterium4-wykres-glowny.png Graphic file (type png)
 <use img/kryterium4-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium4-wykres-glowny.png  used on input line 218.
+Package pdftex.def Info: img/kryterium4-wykres-glowny.png  used on input line 229.
 (pdftex.def)             Requested size: 339.72592pt x 187.10861pt.
-<img/kryterium4-layout.jpg, id=394, 597.432pt x 421.0932pt>
+<img/kryterium4-layout.jpg, id=409, 597.432pt x 421.0932pt>
 File: img/kryterium4-layout.jpg Graphic file (type jpg)
 <use img/kryterium4-layout.jpg>
-Package pdftex.def Info: img/kryterium4-layout.jpg  used on input line 251.
+Package pdftex.def Info: img/kryterium4-layout.jpg  used on input line 262.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [11 <./img/kryterium4-wykres-glowny.png>]
-<img/kryterium4-drogi.jpg, id=424, 597.432pt x 421.0932pt>
+<img/kryterium4-drogi.jpg, id=439, 597.432pt x 421.0932pt>
 File: img/kryterium4-drogi.jpg Graphic file (type jpg)
 <use img/kryterium4-drogi.jpg>
-Package pdftex.def Info: img/kryterium4-drogi.jpg  used on input line 257.
+Package pdftex.def Info: img/kryterium4-drogi.jpg  used on input line 268.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [12 <./img/kryterium4-layout.jpg> <./img/kryterium4-drogi.jpg>]
-<img/kryterium5-wykres-glowny.png, id=431, 353.028pt x 198.414pt>
+<img/kryterium5-wykres-glowny.png, id=446, 353.028pt x 198.414pt>
 File: img/kryterium5-wykres-glowny.png Graphic file (type png)
 <use img/kryterium5-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium5-wykres-glowny.png  used on input line 266.
+Package pdftex.def Info: img/kryterium5-wykres-glowny.png  used on input line 277.
 (pdftex.def)             Requested size: 339.72592pt x 190.95058pt.
-<img/kryterium5-layout.jpg, id=432, 597.432pt x 421.0932pt>
+<img/kryterium5-layout.jpg, id=447, 597.432pt x 421.0932pt>
 File: img/kryterium5-layout.jpg Graphic file (type jpg)
 <use img/kryterium5-layout.jpg>
-Package pdftex.def Info: img/kryterium5-layout.jpg  used on input line 280.
+Package pdftex.def Info: img/kryterium5-layout.jpg  used on input line 291.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/kryterium5-stoki.jpg, id=433, 597.432pt x 421.0932pt>
+<img/kryterium5-stoki.jpg, id=448, 597.432pt x 421.0932pt>
 File: img/kryterium5-stoki.jpg Graphic file (type jpg)
 <use img/kryterium5-stoki.jpg>
-Package pdftex.def Info: img/kryterium5-stoki.jpg  used on input line 286.
+Package pdftex.def Info: img/kryterium5-stoki.jpg  used on input line 297.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [13 <./img/kryterium5-wykres-glowny.png> <./img/kryterium5-layout.jpg>] [14 <./img/kryterium5-stoki.jpg>]
-<img/kryterium6-wykres-pierwszy.png, id=451, 335.946pt x 194.91pt>
+<img/kryterium6-wykres-pierwszy.png, id=466, 335.946pt x 194.91pt>
 File: img/kryterium6-wykres-pierwszy.png Graphic file (type png)
 <use img/kryterium6-wykres-pierwszy.png>
-Package pdftex.def Info: img/kryterium6-wykres-pierwszy.png  used on input line 297.
+Package pdftex.def Info: img/kryterium6-wykres-pierwszy.png  used on input line 308.
 (pdftex.def)             Requested size: 217.42265pt x 126.14574pt.
-<img/kryterium6-wykres-drugi.png, id=452, 335.946pt x 194.691pt>
+<img/kryterium6-wykres-drugi.png, id=467, 335.946pt x 194.691pt>
 File: img/kryterium6-wykres-drugi.png Graphic file (type png)
 <use img/kryterium6-wykres-drugi.png>
-Package pdftex.def Info: img/kryterium6-wykres-drugi.png  used on input line 302.
+Package pdftex.def Info: img/kryterium6-wykres-drugi.png  used on input line 313.
 (pdftex.def)             Requested size: 217.42265pt x 126.00398pt.
-<img/kryterium6-wykres-glowny.png, id=453, 353.466pt x 194.472pt>
+<img/kryterium6-wykres-glowny.png, id=468, 353.466pt x 194.472pt>
 File: img/kryterium6-wykres-glowny.png Graphic file (type png)
 <use img/kryterium6-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium6-wykres-glowny.png  used on input line 309.
+Package pdftex.def Info: img/kryterium6-wykres-glowny.png  used on input line 320.
 (pdftex.def)             Requested size: 339.72592pt x 186.9254pt.
-<img/kryterium6-layout.jpg, id=454, 597.432pt x 421.0932pt>
+<img/kryterium6-layout.jpg, id=469, 597.432pt x 421.0932pt>
 File: img/kryterium6-layout.jpg Graphic file (type jpg)
 <use img/kryterium6-layout.jpg>
-Package pdftex.def Info: img/kryterium6-layout.jpg  used on input line 326.
+Package pdftex.def Info: img/kryterium6-layout.jpg  used on input line 337.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [15 <./img/kryterium6-wykres-pierwszy.png> <./img/kryterium6-wykres-drugi.png> <./img/kryterium6-wykres-glowny.png>]
-<img/kryterium6-aspect.jpg, id=470, 597.432pt x 421.0932pt>
+<img/kryterium6-aspect.jpg, id=485, 597.432pt x 421.0932pt>
 File: img/kryterium6-aspect.jpg Graphic file (type jpg)
 <use img/kryterium6-aspect.jpg>
-Package pdftex.def Info: img/kryterium6-aspect.jpg  used on input line 332.
+Package pdftex.def Info: img/kryterium6-aspect.jpg  used on input line 343.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [16 <./img/kryterium6-layout.jpg> <./img/kryterium6-aspect.jpg>]
-<img/kryterium7-wykres-glowny.png, id=477, 350.4pt x 194.472pt>
+<img/kryterium7-wykres-glowny.png, id=492, 350.4pt x 194.472pt>
 File: img/kryterium7-wykres-glowny.png Graphic file (type png)
 <use img/kryterium7-wykres-glowny.png>
-Package pdftex.def Info: img/kryterium7-wykres-glowny.png  used on input line 342.
+Package pdftex.def Info: img/kryterium7-wykres-glowny.png  used on input line 353.
 (pdftex.def)             Requested size: 339.72592pt x 188.56044pt.
-<img/kryterium7-layout.jpg, id=478, 597.432pt x 421.0932pt>
+<img/kryterium7-layout.jpg, id=493, 597.432pt x 421.0932pt>
 File: img/kryterium7-layout.jpg Graphic file (type jpg)
 <use img/kryterium7-layout.jpg>
-Package pdftex.def Info: img/kryterium7-layout.jpg  used on input line 358.
+Package pdftex.def Info: img/kryterium7-layout.jpg  used on input line 369.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/kryterium7-wezly.jpg, id=479, 597.432pt x 421.0932pt>
+<img/kryterium7-wezly.jpg, id=494, 597.432pt x 421.0932pt>
 File: img/kryterium7-wezly.jpg Graphic file (type jpg)
 <use img/kryterium7-wezly.jpg>
-Package pdftex.def Info: img/kryterium7-wezly.jpg  used on input line 364.
+Package pdftex.def Info: img/kryterium7-wezly.jpg  used on input line 375.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [17 <./img/kryterium7-wykres-glowny.png> <./img/kryterium7-layout.jpg>]
-<img/rozmyte-layout.jpg, id=491, 597.432pt x 421.0932pt>
+<img/rozmyte-layout.jpg, id=506, 597.432pt x 421.0932pt>
 File: img/rozmyte-layout.jpg Graphic file (type jpg)
 <use img/rozmyte-layout.jpg>
-Package pdftex.def Info: img/rozmyte-layout.jpg  used on input line 395.
+Package pdftex.def Info: img/rozmyte-layout.jpg  used on input line 406.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [18 <./img/kryterium7-wezly.jpg>]
-<img/ostre-layout.jpg, id=510, 597.432pt x 421.0932pt>
+<img/ostre-layout.jpg, id=525, 597.432pt x 421.0932pt>
 File: img/ostre-layout.jpg Graphic file (type jpg)
 <use img/ostre-layout.jpg>
-Package pdftex.def Info: img/ostre-layout.jpg  used on input line 401.
+Package pdftex.def Info: img/ostre-layout.jpg  used on input line 412.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/wynik.jpg, id=511, 597.432pt x 421.0932pt>
+<img/wynik.jpg, id=526, 597.432pt x 421.0932pt>
 File: img/wynik.jpg Graphic file (type jpg)
 <use img/wynik.jpg>
-Package pdftex.def Info: img/wynik.jpg  used on input line 407.
+Package pdftex.def Info: img/wynik.jpg  used on input line 418.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [19 <./img/rozmyte-layout.jpg> <./img/ostre-layout.jpg>]
-<img/wynik-po-reklasyfikacji.jpg, id=519, 597.432pt x 421.0932pt>
+<img/wynik-po-reklasyfikacji.jpg, id=534, 597.432pt x 421.0932pt>
 File: img/wynik-po-reklasyfikacji.jpg Graphic file (type jpg)
 <use img/wynik-po-reklasyfikacji.jpg>
-Package pdftex.def Info: img/wynik-po-reklasyfikacji.jpg  used on input line 413.
+Package pdftex.def Info: img/wynik-po-reklasyfikacji.jpg  used on input line 424.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [20 <./img/wynik.jpg> <./img/wynik-po-reklasyfikacji.jpg>]
-<img/przydatne-dzialki.jpg, id=526, 597.432pt x 421.0932pt>
+<img/przydatne-dzialki.jpg, id=541, 597.432pt x 421.0932pt>
 File: img/przydatne-dzialki.jpg Graphic file (type jpg)
 <use img/przydatne-dzialki.jpg>
-Package pdftex.def Info: img/przydatne-dzialki.jpg  used on input line 470.
+Package pdftex.def Info: img/przydatne-dzialki.jpg  used on input line 481.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [21]
-<img/dzialki-przydatne-ortofoto.jpg, id=569, 597.432pt x 421.0932pt>
+<img/dzialki-przydatne-ortofoto.jpg, id=584, 597.432pt x 421.0932pt>
 File: img/dzialki-przydatne-ortofoto.jpg Graphic file (type jpg)
 <use img/dzialki-przydatne-ortofoto.jpg>
-Package pdftex.def Info: img/dzialki-przydatne-ortofoto.jpg  used on input line 476.
+Package pdftex.def Info: img/dzialki-przydatne-ortofoto.jpg  used on input line 487.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [22 <./img/przydatne-dzialki.jpg> <./img/dzialki-przydatne-ortofoto.jpg>]
-<img/cost-raster.jpg, id=576, 597.432pt x 421.0932pt>
+<img/cost-raster.jpg, id=591, 597.432pt x 421.0932pt>
 File: img/cost-raster.jpg Graphic file (type jpg)
 <use img/cost-raster.jpg>
-Package pdftex.def Info: img/cost-raster.jpg  used on input line 491.
+Package pdftex.def Info: img/cost-raster.jpg  used on input line 502.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [23 <./img/cost-raster.jpg>]
-<img/cost-backlink.jpg, id=611, 597.432pt x 421.0932pt>
+<img/cost-backlink.jpg, id=626, 597.432pt x 421.0932pt>
 File: img/cost-backlink.jpg Graphic file (type jpg)
 <use img/cost-backlink.jpg>
-Package pdftex.def Info: img/cost-backlink.jpg  used on input line 633.
+Package pdftex.def Info: img/cost-backlink.jpg  used on input line 644.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [24]
-<img/cost-distance.jpg, id=666, 597.432pt x 421.0932pt>
+<img/cost-distance.jpg, id=681, 597.432pt x 421.0932pt>
 File: img/cost-distance.jpg Graphic file (type jpg)
 <use img/cost-distance.jpg>
-Package pdftex.def Info: img/cost-distance.jpg  used on input line 639.
+Package pdftex.def Info: img/cost-distance.jpg  used on input line 650.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/dzialki-linie.jpg, id=667, 597.432pt x 421.0932pt>
+<img/dzialki-linie.jpg, id=682, 597.432pt x 421.0932pt>
 File: img/dzialki-linie.jpg Graphic file (type jpg)
 <use img/dzialki-linie.jpg>
-Package pdftex.def Info: img/dzialki-linie.jpg  used on input line 645.
+Package pdftex.def Info: img/dzialki-linie.jpg  used on input line 656.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [25 <./img/cost-backlink.jpg> <./img/cost-distance.jpg>]
-<img/plesna-polozenie.jpg, id=675, 597.432pt x 421.0932pt>
+<img/plesna-polozenie.jpg, id=690, 597.432pt x 421.0932pt>
 File: img/plesna-polozenie.jpg Graphic file (type jpg)
 <use img/plesna-polozenie.jpg>
-Package pdftex.def Info: img/plesna-polozenie.jpg  used on input line 658.
+Package pdftex.def Info: img/plesna-polozenie.jpg  used on input line 668.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/plesna-kryterium1-layout.jpg, id=676, 597.432pt x 421.0932pt>
+<img/plesna-kryterium1-layout.jpg, id=691, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium1-layout.jpg Graphic file (type jpg)
 <use img/plesna-kryterium1-layout.jpg>
-Package pdftex.def Info: img/plesna-kryterium1-layout.jpg  used on input line 665.
+Package pdftex.def Info: img/plesna-kryterium1-layout.jpg  used on input line 675.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [26 <./img/dzialki-linie.jpg> <./img/plesna-polozenie.jpg>]
-<img/plesna-kryterium1-woda.jpg, id=683, 597.432pt x 421.0932pt>
+<img/plesna-kryterium1-woda.jpg, id=698, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium1-woda.jpg Graphic file (type jpg)
 <use img/plesna-kryterium1-woda.jpg>
-Package pdftex.def Info: img/plesna-kryterium1-woda.jpg  used on input line 671.
+Package pdftex.def Info: img/plesna-kryterium1-woda.jpg  used on input line 681.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/plesna-kryterium2-layout.jpg, id=684, 597.432pt x 421.0932pt>
+<img/plesna-kryterium2-layout.jpg, id=699, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium2-layout.jpg Graphic file (type jpg)
 <use img/plesna-kryterium2-layout.jpg>
-Package pdftex.def Info: img/plesna-kryterium2-layout.jpg  used on input line 678.
+Package pdftex.def Info: img/plesna-kryterium2-layout.jpg  used on input line 688.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [27 <./img/plesna-kryterium1-layout.jpg> <./img/plesna-kryterium1-woda.jpg>]
-<img/plesna-kryterium2-budynki.jpg, id=691, 597.432pt x 421.0932pt>
+<img/plesna-kryterium2-budynki.jpg, id=706, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium2-budynki.jpg Graphic file (type jpg)
 <use img/plesna-kryterium2-budynki.jpg>
-Package pdftex.def Info: img/plesna-kryterium2-budynki.jpg  used on input line 684.
+Package pdftex.def Info: img/plesna-kryterium2-budynki.jpg  used on input line 694.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/plesna-kryterium3-layout.jpg, id=692, 597.432pt x 421.0932pt>
+<img/plesna-kryterium3-layout.jpg, id=707, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium3-layout.jpg Graphic file (type jpg)
 <use img/plesna-kryterium3-layout.jpg>
-Package pdftex.def Info: img/plesna-kryterium3-layout.jpg  used on input line 692.
+Package pdftex.def Info: img/plesna-kryterium3-layout.jpg  used on input line 702.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [28 <./img/plesna-kryterium2-layout.jpg> <./img/plesna-kryterium2-budynki.jpg>]
-<img/plesna-kryterium3-lasy.jpg, id=699, 597.432pt x 421.0932pt>
+<img/plesna-kryterium3-lasy.jpg, id=714, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium3-lasy.jpg Graphic file (type jpg)
 <use img/plesna-kryterium3-lasy.jpg>
-Package pdftex.def Info: img/plesna-kryterium3-lasy.jpg  used on input line 698.
+Package pdftex.def Info: img/plesna-kryterium3-lasy.jpg  used on input line 708.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/plesna-kryterium4-layout.jpg, id=700, 597.432pt x 421.0932pt>
+<img/plesna-kryterium4-layout.jpg, id=715, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium4-layout.jpg Graphic file (type jpg)
 <use img/plesna-kryterium4-layout.jpg>
-Package pdftex.def Info: img/plesna-kryterium4-layout.jpg  used on input line 706.
+Package pdftex.def Info: img/plesna-kryterium4-layout.jpg  used on input line 716.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [29 <./img/plesna-kryterium3-layout.jpg> <./img/plesna-kryterium3-lasy.jpg>]
-<img/plesna-kryterium4-drogi.jpg, id=707, 597.432pt x 421.0932pt>
+<img/plesna-kryterium4-drogi.jpg, id=722, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium4-drogi.jpg Graphic file (type jpg)
 <use img/plesna-kryterium4-drogi.jpg>
-Package pdftex.def Info: img/plesna-kryterium4-drogi.jpg  used on input line 712.
+Package pdftex.def Info: img/plesna-kryterium4-drogi.jpg  used on input line 722.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/plesna-kryterium5-layout.jpg, id=708, 597.432pt x 421.0932pt>
+<img/plesna-kryterium5-layout.jpg, id=723, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium5-layout.jpg Graphic file (type jpg)
 <use img/plesna-kryterium5-layout.jpg>
-Package pdftex.def Info: img/plesna-kryterium5-layout.jpg  used on input line 720.
+Package pdftex.def Info: img/plesna-kryterium5-layout.jpg  used on input line 730.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [30 <./img/plesna-kryterium4-layout.jpg> <./img/plesna-kryterium4-drogi.jpg>]
-<img/plesna-kryterium5-stoki.jpg, id=715, 597.432pt x 421.0932pt>
+<img/plesna-kryterium5-stoki.jpg, id=730, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium5-stoki.jpg Graphic file (type jpg)
 <use img/plesna-kryterium5-stoki.jpg>
-Package pdftex.def Info: img/plesna-kryterium5-stoki.jpg  used on input line 726.
+Package pdftex.def Info: img/plesna-kryterium5-stoki.jpg  used on input line 736.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
-<img/plesna-kryterium6-layout.jpg, id=716, 597.432pt x 421.0932pt>
+<img/plesna-kryterium6-layout.jpg, id=731, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium6-layout.jpg Graphic file (type jpg)
 <use img/plesna-kryterium6-layout.jpg>
-Package pdftex.def Info: img/plesna-kryterium6-layout.jpg  used on input line 734.
+Package pdftex.def Info: img/plesna-kryterium6-layout.jpg  used on input line 744.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
  [31 <./img/plesna-kryterium5-layout.jpg> <./img/plesna-kryterium5-stoki.jpg>]
-<img/plesna-kryterium6-aspect.jpg, id=724, 597.432pt x 421.0932pt>
+<img/plesna-kryterium6-aspect.jpg, id=739, 597.432pt x 421.0932pt>
 File: img/plesna-kryterium6-aspect.jpg Graphic file (type jpg)
 <use img/plesna-kryterium6-aspect.jpg>
-Package pdftex.def Info: img/plesna-kryterium6-aspect.jpg  used on input line 740.
+Package pdftex.def Info: img/plesna-kryterium6-aspect.jpg  used on input line 750.
 (pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
- [32 <./img/plesna-kryterium6-layout.jpg> <./img/plesna-kryterium6-aspect.jpg>] (sprawozdanie.aux)
+<img/plesna-kryterium7-layout.jpg, id=740, 597.432pt x 421.0932pt>
+File: img/plesna-kryterium7-layout.jpg Graphic file (type jpg)
+<use img/plesna-kryterium7-layout.jpg>
+Package pdftex.def Info: img/plesna-kryterium7-layout.jpg  used on input line 758.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [32 <./img/plesna-kryterium6-layout.jpg> <./img/plesna-kryterium6-aspect.jpg>]
+<img/plesna-kryterium7-wezly.jpg, id=747, 597.432pt x 421.0932pt>
+File: img/plesna-kryterium7-wezly.jpg Graphic file (type jpg)
+<use img/plesna-kryterium7-wezly.jpg>
+Package pdftex.def Info: img/plesna-kryterium7-wezly.jpg  used on input line 764.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+<img/plesna-rozmyte-layout.jpg, id=748, 597.432pt x 421.0932pt>
+File: img/plesna-rozmyte-layout.jpg Graphic file (type jpg)
+<use img/plesna-rozmyte-layout.jpg>
+Package pdftex.def Info: img/plesna-rozmyte-layout.jpg  used on input line 771.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [33 <./img/plesna-kryterium7-layout.jpg> <./img/plesna-kryterium7-wezly.jpg>]
+<img/plesna-ostre-layout.jpg, id=755, 597.432pt x 421.0932pt>
+File: img/plesna-ostre-layout.jpg Graphic file (type jpg)
+<use img/plesna-ostre-layout.jpg>
+Package pdftex.def Info: img/plesna-ostre-layout.jpg  used on input line 777.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+<img/plesna-wynik.jpg, id=756, 597.432pt x 421.0932pt>
+File: img/plesna-wynik.jpg Graphic file (type jpg)
+<use img/plesna-wynik.jpg>
+Package pdftex.def Info: img/plesna-wynik.jpg  used on input line 783.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [34 <./img/plesna-rozmyte-layout.jpg> <./img/plesna-ostre-layout.jpg>]
+<img/plesna-wynik-po-reklasyfikacji.jpg, id=763, 597.432pt x 421.0932pt>
+File: img/plesna-wynik-po-reklasyfikacji.jpg Graphic file (type jpg)
+<use img/plesna-wynik-po-reklasyfikacji.jpg>
+Package pdftex.def Info: img/plesna-wynik-po-reklasyfikacji.jpg  used on input line 789.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+<img/plesna-przydatne-dzialki.jpg, id=764, 597.432pt x 421.0932pt>
+File: img/plesna-przydatne-dzialki.jpg Graphic file (type jpg)
+<use img/plesna-przydatne-dzialki.jpg>
+Package pdftex.def Info: img/plesna-przydatne-dzialki.jpg  used on input line 797.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [35 <./img/plesna-wynik.jpg> <./img/plesna-wynik-po-reklasyfikacji.jpg>]
+<img/plesna-dzialki-przydatne-ortofoto.jpg, id=771, 597.432pt x 421.0932pt>
+File: img/plesna-dzialki-przydatne-ortofoto.jpg Graphic file (type jpg)
+<use img/plesna-dzialki-przydatne-ortofoto.jpg>
+Package pdftex.def Info: img/plesna-dzialki-przydatne-ortofoto.jpg  used on input line 803.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+<img/plesna-dzialki-przydatne-ortofoto-2.jpg, id=772, 597.432pt x 421.0932pt>
+File: img/plesna-dzialki-przydatne-ortofoto-2.jpg Graphic file (type jpg)
+<use img/plesna-dzialki-przydatne-ortofoto-2.jpg>
+Package pdftex.def Info: img/plesna-dzialki-przydatne-ortofoto-2.jpg  used on input line 809.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [36 <./img/plesna-przydatne-dzialki.jpg> <./img/plesna-dzialki-przydatne-ortofoto.jpg>]
+<img/plesna-cost-raster.jpg, id=779, 597.432pt x 421.0932pt>
+File: img/plesna-cost-raster.jpg Graphic file (type jpg)
+<use img/plesna-cost-raster.jpg>
+Package pdftex.def Info: img/plesna-cost-raster.jpg  used on input line 816.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+<img/plesna-cost-backlink.jpg, id=780, 597.432pt x 421.0932pt>
+File: img/plesna-cost-backlink.jpg Graphic file (type jpg)
+<use img/plesna-cost-backlink.jpg>
+Package pdftex.def Info: img/plesna-cost-backlink.jpg  used on input line 822.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [37 <./img/plesna-dzialki-przydatne-ortofoto-2.jpg> <./img/plesna-cost-raster.jpg>]
+<img/plesna-cost-distance.jpg, id=788, 597.432pt x 421.0932pt>
+File: img/plesna-cost-distance.jpg Graphic file (type jpg)
+<use img/plesna-cost-distance.jpg>
+Package pdftex.def Info: img/plesna-cost-distance.jpg  used on input line 828.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+<img/plesna-dzialki-linie.jpg, id=789, 597.432pt x 421.0932pt>
+File: img/plesna-dzialki-linie.jpg Graphic file (type jpg)
+<use img/plesna-dzialki-linie.jpg>
+Package pdftex.def Info: img/plesna-dzialki-linie.jpg  used on input line 834.
+(pdftex.def)             Requested size: 339.72592pt x 239.46017pt.
+ [38 <./img/plesna-cost-backlink.jpg> <./img/plesna-cost-distance.jpg>] [39 <./img/plesna-dzialki-linie.jpg>] (sprawozdanie.aux)
 Package rerunfilecheck Info: File `sprawozdanie.out' has not changed.
-(rerunfilecheck)             Checksum: C142F91CF747DE322625FFCE10274E16;9423.
+(rerunfilecheck)             Checksum: D2A7B42D3ACB4B3F0829A7B0D6BBDEDD;9990.
  ) 
 Here is how much of TeX's memory you used:
- 15386 strings out of 476339
- 251062 string characters out of 5788119
+ 15503 strings out of 476339
+ 254601 string characters out of 5788119
  2196340 words of memory out of 5000000
- 35232 multiletter control sequences out of 15000+600000
+ 35313 multiletter control sequences out of 15000+600000
  523698 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,77p,664b,2132s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,77p,665b,2079s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt0900.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0500.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1000.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\adria\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1728.pk>
-Output written on sprawozdanie.pdf (32 pages, 15840081 bytes).
+Output written on sprawozdanie.pdf (39 pages, 21257092 bytes).
 PDF statistics:
- 1180 PDF objects out of 1200 (max. 8388607)
- 344 named destinations out of 1000 (max. 500000)
- 673 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1261 PDF objects out of 1440 (max. 8388607)
+ 367 named destinations out of 1000 (max. 500000)
+ 762 words of extra memory for PDF output out of 10000 (max. 10000000)
 

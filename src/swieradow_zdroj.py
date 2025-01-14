@@ -76,14 +76,14 @@ slope_fuzzy.save(f'{geobaza}\\kryterium_5')
 
 #kryterium 6
 aspect = arcpy.ddd.Aspect(nmt)
-aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 135")
-aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 225")
+aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 113")
+aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 248")
 aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
 aspect_overlay.save(f'{geobaza}\\kryterium_6')
 
 #kryterium 7 - wezly
 wezly_max = float(arcpy.management.GetRasterProperties(wezly, "MAXIMUM")[0].replace(',', '.'))
-wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {0.7 * wezly_max} {0.3 * wezly_max}")
+wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {wezly_max} {0.5 * wezly_max}")
 wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
 
 def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci):
@@ -139,8 +139,21 @@ def wybierz_przydatne_dzialki(wariant, prog_przydatnosci):
 
     dzialki_layer = "dzialki_layer"
     arcpy.management.MakeFeatureLayer(dzialki, dzialki_layer)
-    arcpy.management.SelectLayerByAttribute(dzialki_layer, "NEW_SELECTION", f"przydatnosc > {prog_przydatnosci} AND shape_area > 20000 ")
+    arcpy.management.SelectLayerByAttribute(dzialki_layer, "NEW_SELECTION", f"przydatnosc > {prog_przydatnosci}")
     arcpy.management.CopyFeatures(dzialki_layer, f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}")
+
+    arcpy.management.Dissolve(
+    in_features=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}",
+    out_feature_class=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve",
+    dissolve_field=None,
+    statistics_fields=None,
+    multi_part="SINGLE_PART",
+    unsplit_lines="DISSOLVE_LINES",
+    concatenation_separator=""
+)
+    arcpy.management.MakeFeatureLayer(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve", f"{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve")
+    arcpy.management.SelectLayerByAttribute(f"{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve", "NEW_SELECTION", "Shape_Area >= 20000")
+    arcpy.management.CopyFeatures(f"{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve", f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_przydatnosci}")
 
 def stworz_przylacze(wariant, prog_przydatnosci):
     pt_merged_layer = "pt_merged_layer"
@@ -199,7 +212,7 @@ def stworz_przylacze(wariant, prog_przydatnosci):
     )
 
     out_distance = arcpy.sa.CostDistance(
-        in_source_data=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}",
+        in_source_data=f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_przydatnosci}",
         in_cost_raster=f"{geobaza}\\{wariant}_cost_raster",
         maximum_distance=None,
         out_backlink_raster=f"{geobaza}\\{wariant}_cost_backlink",
