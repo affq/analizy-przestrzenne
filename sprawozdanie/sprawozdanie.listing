@@ -1,0 +1,78 @@
+pt_merged_layer = "pt_merged_layer"
+arcpy.management.MakeFeatureLayer(pt_merged, pt_merged_layer)
+arcpy.management.AddField(pt_merged_layer, "cost", "FLOAT")
+arcpy.management.CalculateField(
+    in_table=pt_merged_layer,
+    field="cost",
+    expression="costs.get(!x_kod!, 0)",
+    expression_type="PYTHON3",
+    code_block="""costs = {
+    "PTWP01": 0,
+    "PTWP02": 200,
+    "PTWP03": 0,
+    "PTZB02": 100,
+    "PTZB01": 200,
+    "PTZB05": 50,
+    "PTZB04": 200,
+    "PTZB03": 200,
+    "PTLZ01": 100,
+    "PTLZ02": 50,
+    "PTLZ03": 50,
+    "PTRK01": 15,
+    "PTRK02": 15,
+    "PTUT03": 100,
+    "PTUT02": 90,
+    "PTUT04": 20,
+    "PTUT05": 20,
+    "PTUT01": 0,
+    "PTTR02": 1,
+    "PTTR01": 20,
+    "PTKM02": 200,
+    "PTKM01": 100,
+    "PTKM03": 200,
+    "PTKM04": 0,
+    "PTGN01": 1,
+    "PTGN02": 1,
+    "PTGN03": 1,
+    "PTGN04": 1,
+    "PTPL01": 50,
+    "PTSO01": 0,
+    "PTSO02": 0,
+    "PTWZ01": 0,
+    "PTWZ02": 0,
+    "PTNZ01": 150,
+    "PTNZ02": 150
+    }"""
+)
+
+out_cost = arcpy.conversion.PolygonToRaster(
+    in_features=pt_merged_layer,
+    value_field="cost",
+    out_rasterdataset=f"{geobaza}\\{wariant}_cost_raster",
+    cell_assignment="CELL_CENTER",
+    cellsize=5
+)
+
+out_distance = arcpy.sa.CostDistance(
+    in_source_data=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}",
+    in_cost_raster=f"{geobaza}\\{wariant}_cost_raster",
+    maximum_distance=None,
+    out_backlink_raster=f"{geobaza}\\{wariant}_cost_backlink",
+    source_cost_multiplier=None,
+    source_start_cost=None,
+    source_resistance_rate=None,
+    source_capacity=None,
+    source_direction=""
+)
+out_distance.save(f"{geobaza}\\{wariant}_cost_distance")
+
+out_path = arcpy.sa.CostPath(
+    in_destination_data=linie_elektroenergetyczne,
+    in_cost_distance_raster=f"{geobaza}\\{wariant}_cost_distance",
+    in_cost_backlink_raster=f"{geobaza}\\{wariant}_cost_backlink",
+    path_type="BEST_SINGLE",
+    force_flow_direction_convention="INPUT_RANGE"
+)
+out_path.save(f"{geobaza}\\{wariant}_cost_path")
+
+path_vector = arcpy.conversion.RasterToPolyline(in_raster=out_path, out_polyline_features=f"{geobaza}\\{wariant}_cost_path_vector")

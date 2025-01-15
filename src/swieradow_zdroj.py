@@ -94,66 +94,52 @@ def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, wa
     kryteria_ostre = arcpy.sa.FuzzyOverlay([woda_rosnaca, f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
     kryteria_ostre.save(f'{geobaza}\\kryteria_ostre')
 
-    suma = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
-    suma.save(f'{geobaza}\\{wariant}_wynik')
-    arcpy.management.CalculateStatistics(suma)
-    max_przydatnosc = suma.maximum
+    iloczyn = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
+    iloczyn.save(f'{geobaza}\\{wariant}_wynik')
+    arcpy.management.CalculateStatistics(iloczyn)
+    max_przydatnosc = iloczyn.maximum
 
-
-    wynik_reclassified = arcpy.sa.Reclassify(suma, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci * max_przydatnosc, 0], [prog_przydatnosci * max_przydatnosc, 1, 1]]))
+    wynik_reclassified = arcpy.sa.Reclassify(iloczyn, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci * max_przydatnosc, 0], [prog_przydatnosci * max_przydatnosc, 1, 1]]))
     wynik_reclassified.save(f'{geobaza}\\{wariant}_wynik_reclassified')
 
 def wybierz_przydatne_dzialki(wariant, prog_przydatnosci):
-    poligon_przydatnosci = "poligon_przydatnosci"
-    arcpy.conversion.RasterToPolygon(f'{geobaza}\\{wariant}_wynik_reclassified', poligon_przydatnosci, "NO_SIMPLIFY", "VALUE")
+    arcpy.conversion.RasterToPolygon(f'{geobaza}\\{wariant}_wynik_reclassified', 'poligon_przydatnosci', "NO_SIMPLIFY", "VALUE")
+    arcpy.management.MakeFeatureLayer('poligon_przydatnosci', "poligon_przydatnosci_layer")
+    arcpy.management.SelectLayerByAttribute("poligon_przydatnosci_layer", "NEW_SELECTION", "gridcode = 1")
+    arcpy.management.CopyFeatures("poligon_przydatnosci_layer", f"{geobaza}\\{wariant}_poligon_przydatnosci")
+    
+    arcpy.analysis.SummarizeWithin(
+        in_polygons=dzialki,
+        in_sum_features=f"{geobaza}\\{wariant}_poligon_przydatnosci",
+        out_feature_class=f'{geobaza}\\{wariant}_summarized_within',
+        keep_all_polygons="ONLY_INTERSECTING",
+        shape_unit="SQUAREMETERS",
+        add_group_percent="NO_PERCENT",
+    )
 
-    poligon_przydatnosci_layer = "poligon_przydatnosci_layer"
-    arcpy.management.MakeFeatureLayer(poligon_przydatnosci, poligon_przydatnosci_layer)
-    arcpy.management.SelectLayerByAttribute(poligon_przydatnosci_layer, "NEW_SELECTION", "gridcode = 1")
-    arcpy.management.CopyFeatures(poligon_przydatnosci_layer, f"{geobaza}\\{wariant}_poligon_przydatnosci")
+    arcpy.management.CalculateField(
+        in_table=f'{geobaza}\\{wariant}_summarized_within',
+        field="pow_przyd",
+        expression="100*!sum_Area_squaremeters!/!Shape_Area!",
+        expression_type="PYTHON3",
+        code_block="",
+        field_type="FLOAT"
+    )
 
-    dzialki_przeciete = "dzialki_przeciete"
-    arcpy.analysis.Intersect([dzialki, poligon_przydatnosci], dzialki_przeciete, "ALL")
-    arcpy.management.CopyFeatures(dzialki_przeciete, f"{geobaza}\\{wariant}_dzialki_przeciete_przez_poligony")
-
-    arcpy.management.AddField(dzialki_przeciete, "pole", "DOUBLE")
-    arcpy.management.CalculateField(dzialki_przeciete, "pole", "!shape.area@SQUAREMETERS!", "PYTHON3")
-
-    arcpy.management.AddField(dzialki, "pole", "DOUBLE")
-    arcpy.management.CalculateField(dzialki, "pole", "!shape.area@SQUAREMETERS!", "PYTHON3")
-
-    arcpy.management.AddField(dzialki, "pole_przydatne", "DOUBLE")
-    arcpy.management.CalculateField(dzialki, "pole_przydatne", 0, "PYTHON3")
-
-    with arcpy.da.UpdateCursor(dzialki_przeciete, ["ID_DZIALKI", "pole", "gridcode"]) as cursor:
-        for row in cursor:
-            if row[2] == 1:
-                with arcpy.da.UpdateCursor(dzialki, ["ID_DZIALKI", "pole", "pole_przydatne"]) as cursor2:
-                    for row2 in cursor2:
-                        if row[0] == row2[0]:
-                            row2[2] += row[1]
-                            cursor2.updateRow(row2)
-
-    arcpy.management.AddField(dzialki, "przydatnosc", "DOUBLE")
-    arcpy.management.CalculateField(dzialki, "przydatnosc", "(!pole_przydatne! / !pole!) * 100", "PYTHON3")
-
-    dzialki_layer = "dzialki_layer"
-    arcpy.management.MakeFeatureLayer(dzialki, dzialki_layer)
-    arcpy.management.SelectLayerByAttribute(dzialki_layer, "NEW_SELECTION", f"przydatnosc > {prog_przydatnosci}")
-    arcpy.management.CopyFeatures(dzialki_layer, f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}")
+    dzialki_przydatne_powyzej_progu = arcpy.management.SelectLayerByAttribute(f'{geobaza}\\{wariant}_summarized_within', "NEW_SELECTION", f"pow_przyd >= 60")
+    arcpy.management.CopyFeatures(dzialki_przydatne_powyzej_progu, f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej")
 
     arcpy.management.Dissolve(
-    in_features=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}",
-    out_feature_class=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve",
-    dissolve_field=None,
-    statistics_fields=None,
-    multi_part="SINGLE_PART",
-    unsplit_lines="DISSOLVE_LINES",
-    concatenation_separator=""
-)
-    arcpy.management.MakeFeatureLayer(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve", f"{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve")
-    arcpy.management.SelectLayerByAttribute(f"{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve", "NEW_SELECTION", "Shape_Area >= 20000")
-    arcpy.management.CopyFeatures(f"{wariant}_dzialki_przydatne_powyzej_{prog_przydatnosci}_dissolve", f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_przydatnosci}")
+        in_features=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej",
+        out_feature_class=f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve",
+        multi_part="SINGLE_PART",
+        unsplit_lines="DISSOLVE_LINES",
+        concatenation_separator=""
+    )
+
+    arcpy.management.MakeFeatureLayer(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve", f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer")
+    arcpy.management.SelectLayerByAttribute(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer", "NEW_SELECTION", "Shape_Area >= 20000")
+    arcpy.management.CopyFeatures(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer", f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_przydatnosci}")
 
 def stworz_przylacze(wariant, prog_przydatnosci):
     pt_merged_layer = "pt_merged_layer"
@@ -203,7 +189,7 @@ def stworz_przylacze(wariant, prog_przydatnosci):
         }"""
     )
 
-    out_cost = arcpy.conversion.PolygonToRaster(
+    arcpy.conversion.PolygonToRaster(
         in_features=pt_merged_layer,
         value_field="cost",
         out_rasterdataset=f"{geobaza}\\{wariant}_cost_raster",
@@ -214,13 +200,7 @@ def stworz_przylacze(wariant, prog_przydatnosci):
     out_distance = arcpy.sa.CostDistance(
         in_source_data=f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_przydatnosci}",
         in_cost_raster=f"{geobaza}\\{wariant}_cost_raster",
-        maximum_distance=None,
         out_backlink_raster=f"{geobaza}\\{wariant}_cost_backlink",
-        source_cost_multiplier=None,
-        source_start_cost=None,
-        source_resistance_rate=None,
-        source_capacity=None,
-        source_direction=""
     )
     out_distance.save(f"{geobaza}\\{wariant}_cost_distance")
 
@@ -232,7 +212,7 @@ def stworz_przylacze(wariant, prog_przydatnosci):
         force_flow_direction_convention="INPUT_RANGE"
     )
     out_path.save(f"{geobaza}\\{wariant}_cost_path")
-    path_vector = arcpy.conversion.RasterToPolyline(in_raster=out_path, out_polyline_features=f"{geobaza}\\{wariant}_cost_path_vector")
+    arcpy.conversion.RasterToPolyline(in_raster=out_path, out_polyline_features=f"{geobaza}\\{wariant}_cost_path_vector")
 
 def licz(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci_piksela, prog_przydatnosci_powierzchni):
     prog_przydatnosci_piksela = prog_przydatnosci_piksela / 100
