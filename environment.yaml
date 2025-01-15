@@ -1,8 +1,0 @@
-name: analizy
-channels:
-  - esri
-  - defaults
-dependencies:
-  - python=3.9
-  - arcpy
-  - numpy

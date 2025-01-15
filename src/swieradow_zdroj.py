@@ -2,6 +2,27 @@ import arcpy.analysis
 import arcpy.management
 import arcpy.sa
 
+# geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\Plesna\Plesna.gdb"
+# arcpy.env.workspace = "in_memory"
+# arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRF2000-PL_CS92")
+# arcpy.env.extent = f"{geobaza}\\gmina_buffer"
+# arcpy.env.mask = f"{geobaza}\\gmina_buffer"
+# arcpy.env.cellSize = 5
+# arcpy.env.overwriteOutput = True
+
+# swrs = arcpy.analysis.Buffer(f"{geobaza}\\SWRS_L", f"{geobaza}\\SWRS_L_buffer", '1 Centimeter')
+# ptwp = f"{geobaza}\\PTWP_A"
+# water = arcpy.management.Merge([swrs, ptwp], 'water')
+# buildings = f"{geobaza}\\BUBD_A"
+# ptlz = f"{geobaza}\\PTLZ_A"
+# nmt = f'{geobaza}\\nmt'
+# drogi = f"{geobaza}\\SKDR_L"
+# wezly = f"{geobaza}\\wezly"
+# dzialki = f'{geobaza}\\dzialki'
+# pt_merged = f'{geobaza}\\pokrycie_terenu'
+# linie_elektroenergetyczne = f'{geobaza}\\SULN_L'
+
+
 # geobaza = r"C:/Users/adria/OneDrive/Pulpit/analizy-przestrzenne/MyProject12/MyProject12.gdb"
 geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
 arcpy.env.workspace = "in_memory"
@@ -15,7 +36,7 @@ arcpy.env.overwriteOutput = True
 swrs_0210_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0210', f'{geobaza}\\SWRS_L_0210_buffer', '1 Centimeter')
 swrs_0212_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0212', f'{geobaza}\\SWRS_L_0212_buffer', '1 Centimeter')
 water = arcpy.management.Merge([swrs_0210_buffer, swrs_0212_buffer, f'{geobaza}\\PTWP_A_0210', f'{geobaza}\\PTWP_A_0212'], 'water')
-budynki = arcpy.management.Merge([f'{geobaza}\\BUBD_A_0210', f'{geobaza}\\BUBD_A_0212'], 'budynki')
+buildings = arcpy.management.Merge([f'{geobaza}\\BUBD_A_0210', f'{geobaza}\\BUBD_A_0212'], 'buildings')
 ptlz = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_0212'], 'ptlz')
 nmt = f'{geobaza}\\nmt'
 drogi = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'drogi')
@@ -25,18 +46,18 @@ pt_merged = f'{geobaza}\\PT_merged'
 linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
 
 #kryterium 1
-out_distance_accumulation_raster = arcpy.sa.DistanceAccumulation(in_source_data=water)
-woda_rosnaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 100 102")
-woda_malejaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 1000 500")
-woda_mapa = arcpy.sa.FuzzyOverlay([woda_rosnaca, woda_malejaca], 'AND')
-woda_mapa.save(f'{geobaza}\\kryterium_1')
+water_accumulation = arcpy.sa.DistanceAccumulation(in_source_data=water)
+increasing_water = arcpy.sa.FuzzyMembership(water_accumulation, fuzzy_function="LINEAR 100 102")
+decreasing_water = arcpy.sa.FuzzyMembership(water_accumulation, fuzzy_function="LINEAR 1000 500")
+water_map = arcpy.sa.FuzzyOverlay([increasing_water, decreasing_water], 'AND')
+water_map.save(f'{geobaza}\\kryterium_1')
 
 #kryterium 2
 query = "FOBUD = 'budynki mieszkalne'"
-arcpy.analysis.Select(budynki, 'budynki_mieszkalne', query)
-out_distance_accumulation_buildings = arcpy.sa.DistanceAccumulation(in_source_data='budynki_mieszkalne')
-budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 300")
-budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
+arcpy.analysis.Select(buildings, 'residential_buildings', query)
+buildings_accumulation = arcpy.sa.DistanceAccumulation(in_source_data='residential_buildings')
+residential_buildings = arcpy.sa.FuzzyMembership(buildings_accumulation, fuzzy_function="LINEAR 150 300")
+residential_buildings.save(f'{geobaza}\\kryterium_2')
 
 #kryterium 3
 query = "RODZAJ = 'las'"
@@ -76,9 +97,9 @@ slope_fuzzy.save(f'{geobaza}\\kryterium_5')
 
 #kryterium 6
 aspect = arcpy.ddd.Aspect(nmt)
-aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 113")
-aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 248")
-aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
+increasing_aspect = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 113")
+decreasing_aspect = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 248")
+aspect_overlay = arcpy.sa.FuzzyOverlay([increasing_aspect, decreasing_aspect], 'AND')
 aspect_overlay.save(f'{geobaza}\\kryterium_6')
 
 #kryterium 7 - wezly
@@ -91,7 +112,7 @@ def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, wa
     weighted_sum = arcpy.sa.WeightedSum(tabela_kryteriow)
     weighted_sum.save(f'{geobaza}\\{wariant}_suma_rozmyte')
 
-    kryteria_ostre = arcpy.sa.FuzzyOverlay([woda_rosnaca, f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
+    kryteria_ostre = arcpy.sa.FuzzyOverlay([increasing_water, f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
     kryteria_ostre.save(f'{geobaza}\\kryteria_ostre')
 
     iloczyn = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
@@ -126,7 +147,8 @@ def wybierz_przydatne_dzialki(wariant, prog_przydatnosci, prog_powierzchni):
         field_type="FLOAT"
     )
 
-    dzialki_przydatne_powyzej_progu = arcpy.management.SelectLayerByAttribute(f'{geobaza}\\{wariant}_summarized_within', "NEW_SELECTION", f"pow_przyd >= {prog_przydatnosci}")
+    arcpy.management.MakeFeatureLayer(f'{geobaza}\\{wariant}_summarized_within', f'{geobaza}\\{wariant}_summarized_within_layer')
+    dzialki_przydatne_powyzej_progu = arcpy.management.SelectLayerByAttribute(f'{geobaza}\\{wariant}_summarized_within_layer', "NEW_SELECTION", f"pow_przyd >= {prog_przydatnosci}")
     arcpy.management.CopyFeatures(dzialki_przydatne_powyzej_progu, f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej")
 
     arcpy.management.Dissolve(

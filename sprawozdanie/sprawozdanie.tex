@@ -7,6 +7,8 @@
 \usepackage[a4paper,margin=1in]{geometry} 
 \parindent = 0pt
 \usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{minted}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
@@ -22,7 +24,7 @@
   listing engine=minted,
   listing only,
   minted language=#2,
-  minted style=default,
+  minted style=manni,
   minted options={%
     linenos,
     gobble=0,
@@ -59,13 +61,45 @@
 \newpage
 \section{Wybór lokalizacji farmy fotowoltaicznej}
 
-co należy wziąć pod uwagę, wybierając lokalizację farmy
-fotowoltaicznej (rozważania teoretyczne, akty prawne wraz z cytowaniami źródeł /
-bibliografią)
+Wybór optymalnej lokalizacji dla farmy fotowoltaicznej jest kluczowym etapem w procesie inwestycyjnym, wymagającym uwzględnienia szeregu czynników środowiskowych, technicznych, ekonomicznych i prawnych. Celem niniejszego sprawozdania jest przedstawienie wielokryterialnej analizy (MCE) mającej na celu wskazanie najlepszej lokalizacji dla farmy fotowoltaicznej, z uwzględnieniem zarówno aspektów teoretycznych, jak i obowiązujących regulacji prawnych. \newline
+Przy wyborze lokalizacji farmy fotowoltaicznej należy wziąć pod uwagę między innymi takie czynniki jak:
 
-\section{Cel i analizowany obszar}
+\begin{enumerate}[label=•]
+    \item nasłonecznienie terenu - podstawowy czynnik wpływający na efektywność instalacji 
+    \item ukształtowanie terenu - preferowane są tereny płaskie lub o niewielkim nachyleniu w kierunku południowym
+    \item powierzchnia i kształt działki; elektrownia fotowoltaiczna to instalacja o mocy od 1 MW - ma montaż elektrowni o takiej mocy potrzeba około 2 ha powierzchni i szerokość minimum 50 m  \footnote{https://hymon.pl/wymogi-jakie-musi-spelniac-dzialka-pod-fotowoltaike/}
+    \item odległość od zabudowań mieszkalnych - zalecana minimalna odległość to 500 m ze względu na potencjalne uciążliwości
+    \item dostępność dróg dojazdowych - ułatwia transport i logistykę podczas budowy i eksploatacji
+    \item odległość od rzek i zbiorników wodnych
+    \item pokrycie terenu - preferowane są tereny niezadrzewione i niezacienione
+    \item dostępność infrastruktury energetycznej - bliskość sieci elektroenergetycznej średniego napięcia (zalecana odległość do 200 metrów)
+    \footnote{https://electrum.pl/jak-wybrac-najlepsza-lokalizacje-do-budowy-farmy-fotowoltaicznej/}
+    \item klasa gruntu - preferowane są grunty grunty klasy IV lub niższej, aby nie blokować terenów o wysokiej wartości rolniczej \footnote{https://electrum.pl/jak-zalozyc-farme-fotowoltaiczna-wyjasniamy-etapy/}
+\end{enumerate}
+\vspace{10pt}
+
+Analiza wielokryterialna pozwala na kompleksową ocenę potencjalnych lokalizacji, uwzględniając wszystkie wymienione czynniki. Metoda ta umożliwia obiektywne porównanie różnych wariantów i wybór optymalnej lokalizacji.
+\vspace{10pt}
+
+W kontekście prawnym, kluczowe akty regulujące proces lokalizacji i budowy farm fotowoltaicznych to \footnote{https://www.prawo-budowlane.info/budowa-farmy-fotowoltaicznej-procedury-i-pozwolenia,544,material\_prawo\_budowlane.html}:
+
+\begin{enumerate}[label=•]
+    \item Ustawa z dnia 27 marca 2003 r. o planowaniu i zagospodarowaniu przestrzennym
+    \item Ustawa z dnia 7 lipca 1994 r. - Prawo budowlane
+    \item Ustawa z dnia 20 lutego 2015 r. o odnawialnych źródłach energii
+    \item Ustawa z dnia 3 lutego 1995 r. o ochronie gruntów rolnych i leśnych
+\end{enumerate}
+
+\section{Cel projektu}
 
 Celem projektu było wskazanie optymalnej lokalizacji nowej farmy fotowoltaicznej dla obszaru gminy Świeradów-Zdrój (powiat lubański, województwo dolnośląskie).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/swieradow.png}
+    \caption{Położenie gminy Świeradów-Zdrój na mapie województwa dolnośląskiego}
+\end{figure}
+\newpage
 
 \section{Analizowane kryteria}
 
@@ -119,44 +153,58 @@ arcpy.env.overwriteOutput = True
 \end{mintedbox}
 \vspace{10pt}
 
-Następnie zapisano do zmiennych wszystkie niezbędne warstwy do przeprowadzenia analizy oraz, jeżeli było to konieczne, dokonano podstawowych operacji, w celu złączenia danych dla dwóch powiatów.
+\begin{mintedbox}{python}
+linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
+\end{mintedbox}
+\vspace{10pt}
+
+\subsection{Kryterium 1: odległość od rzek i zbiorników wodnych}
+Jako dane wejściowe do rozpatrzenia kryterium pierwszego wykorzystano obiekty o kodzie OT\_SWRS\_L z bazy BDOT10k, reprezentujące rzeki i strumienie, oraz obiekty o kodzie OT\_PTWP\_A, reprezentujące wody powierzchniowe. 
+Wokół obiektów liniowych stworzono centymetrowy bufor, aby zamienić je na obiekty poligonowe i móc połączyć je w jedną klasę z obiektami reprezentującymi wody powierzchniowe. Użyto do tego narzędzi \textit{Buffer} oraz \textit{Merge}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
 swrs_0210_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0210', f'{geobaza}\\SWRS_L_0210_buffer', '1 Centimeter')
 swrs_0212_buffer = arcpy.analysis.Buffer(f'{geobaza}\\SWRS_L_0212', f'{geobaza}\\SWRS_L_0212_buffer', '1 Centimeter')
 water = arcpy.management.Merge([swrs_0210_buffer, swrs_0212_buffer, f'{geobaza}\\PTWP_A_0210', f'{geobaza}\\PTWP_A_0212'], 'water')
-budynki = arcpy.management.Merge([f'{geobaza}\\BUBD_A_0210', f'{geobaza}\\BUBD_A_0212'], 'budynki')
-ptlz = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_0212'], 'ptlz')
-nmt = f'{geobaza}\\nmt'
-drogi = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'drogi')
-wezly = f'{geobaza}\\wezly_raster'
-dzialki = f'{geobaza}\\dzialki'
-pt_merged = f'{geobaza}\\PT_merged'
-linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
-\end{mintedbox}
-\vspace{15pt}
-
-\subsection{Kryterium 1: odległość od rzek i zbiorników wodnych}
-Jako dane wejściowe do rozpatrzenia kryterium pierwszego wykorzystano warstwy zawierające obiekty o kodzie OT\_SWRS\_L z BDOT10k, reprezentujące rzeki i strumienie, oraz obiekty o kodzie OT\_PTWP\_A, reprezentujące wody powierzchniowe. W poprzednim, kroku, przygotowując dane, wokół obiektów liniowych stworzono centymetrowy bufor, aby zamienić je na obiekty poligonowe i móc połączyć je w jedną klasę z obiektami reprezentującymi wody powierzchniowe. \newline
-Pierwszym krokiem analizy dla tego kryterium było wykonanie mapy odległości od wód z użyciem narzędzia \textit{DistanceAccumulation} z zestawu narzędzi \textit{Spatial Analyst}.
-\vspace{5pt}
-
-\begin{mintedbox}{python}
-out_distance_accumulation_raster = arcpy.sa.DistanceAccumulation(in_source_data=water)
 \end{mintedbox}
 \vspace{10pt}
 
-Następnie, z użyciem narzędzia \textit{FuzzyMembership} zbadano członkostwo poszczególnych komórek, wykorzystując do tego utworzony w poprzednim kroku raster. W pierwszej funkcji, rosnącej, przyporządkowano komórkom o wartościach od 0 do 100 wartość 0, komórkom o wartościach od 100 do 102 przyporządkowano wartości rosnące liniowo do 1,  a wartości od 102 w górę zreklasyfikowano na 1. Druga funkcja, malejąca, przyporządkowywała komórkom odległym od wód o ponad 1000 metrów wartość 0, komórkom odległym od 1000 do 500 metrów - rosnąco wartości od 0 do 1, a komórki bliższe niż 500 metrów od wód przyjęły wartość 1. 
+Pierwszym krokiem analizy dla tego kryterium było wykonanie mapy odległości od wód z użyciem narzędzia \textit{Distance Accumulation} z zestawu narzędzi \textit{Spatial Analyst}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-woda_rosnaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 100 102")
-woda_malejaca = arcpy.sa.FuzzyMembership(out_distance_accumulation_raster, fuzzy_function="LINEAR 1000 500")
+water_accumulation = arcpy.sa.DistanceAccumulation(in_source_data=water)
 \end{mintedbox}
+\vspace{10pt}
+
+Następnie, z użyciem narzędzia \textit{Fuzzy Membership} zbadano członkostwo poszczególnych komórek, wykorzystując do tego utworzony w poprzednim kroku raster.
+\vspace{5pt}
+
+\begin{mintedbox}{python}
+increasing_water = arcpy.sa.FuzzyMembership(water_accumulation, fuzzy_function="LINEAR 100 102")
+decreasing_water = arcpy.sa.FuzzyMembership(water_accumulation, fuzzy_function="LINEAR 1000 500")
+\end{mintedbox}
+\vspace{5pt}
+
+W pierwszej funkcji, rosnącej:
+\begin{enumerate}[label=•]
+    \item wartości \( \leq 100 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \geq 102 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 100 a 102 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 100
+\end{enumerate}
+\vspace{5pt}
+
+Dla drugiej funkcji, malejącej:
+\begin{enumerate}[label=•]
+    \item wartości \( \geq 1000 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \leq 500 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 1000 a 500 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 1000.
+\end{enumerate}
 \vspace{10pt}
 
 Reklasyfikacji dokonano zgodnie z poniższymi rysunkami.
+\vspace{5pt}
 
 \begin{figure}[H]
     \centering
@@ -173,12 +221,11 @@ Reklasyfikacji dokonano zgodnie z poniższymi rysunkami.
 \end{figure}
 \vspace{10pt}
 
-Ostateczny wynik kryterium pierwszego uzyskano po połączeniu obu warstw utworzonych wcześniej przy użyciu fuzzy logic. Wykorzystano do tego narzędzie \textit{FuzzyOverlay}.
+Ostateczny wynik dla kryterium pierwszego uzyskano po połączeniu obu warstw utworzonych wcześniej przy użyciu logiki rozmytej. Wykorzystano do tego narzędzie \textit{FuzzyOverlay}. Raster wynikowy pokazuje obszary, które spełniają oba kryteria jednocześnie, uwzględniając najniższy poziom spełnienia.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-woda_mapa = arcpy.sa.FuzzyOverlay([woda_rosnaca, woda_malejaca], 'AND')
-woda_mapa.save(f'{geobaza}\\kryterium_1')
+water_map = arcpy.sa.FuzzyOverlay([increasing_water, decreasing_water], 'AND')
 \end{mintedbox}
 \vspace{5pt}
 
@@ -187,58 +234,69 @@ woda_mapa.save(f'{geobaza}\\kryterium_1')
     \includegraphics[width=0.6\textwidth]{img/kryterium1-wykres-glowny.png}
     \caption{Reklasyfikacja dla kryterium 1.}
 \end{figure}
-\newpage
 
-Wynikiem analizy dla kryterium pierwszego była poniższa mapa. Wyklucza ona z przydatności wąską część obszaru położoną wokół wód. Reszta obszaru, ze względu na dosyć szeroki zakres odległości od wody, dla których przydatność reklasyfikowano na 1, ma korzystne warunki do inwestycji.
+Przydatność dla kryterium pierwszego pokazuje poniższa mapa. \newline
+Tereny przydatne (białe obszary) stanowią około 80.6\% całkowitej powierzchni, co świadczy o dużej dostępności terenów pod inwestycję. Tereny nieprzydatne (czarne obszary) to tylko około 16.2\% powierzchni, co oznacza, że strefa buforowa 150m od wody oraz obszary położone powyżej 1000m od wody zajmują stosunkowo niewielką część analizowanego obszaru. \newline
+Większość terenu jest więc dostępna pod inwestycję, a strefy wykluczone układają się w charakterystyczny wzór wzdłuż cieków wodnych.
 \vspace{5pt}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium1-layout.jpg}
     \caption{Mapa przydatności dla kryterium 1.}
+    \label{mapa-przydatnosci-1}
 \end{figure}
 \vspace{10pt}
-
-Mapę zapisano do geobazy w celu użycia w późniejszym etapie.
-\vspace{5pt}
-
-\begin{mintedbox}{python}
-woda_mapa.save(f'{geobaza}\\kryterium_1')
-\end{mintedbox}
-\vspace{10pt}
+\newpage
 
 Poniżej zaprezentowano mapę przedstawiającą rzeki i wody powierzchniowe na tle utworzonej mapy przydatności.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium1-woda.jpg}
-    \caption{Mapa przydatności dla kryterium 1. zawierająca rzeki oraz zbiorniki wodne}
+    \caption{Rzeki oraz wody powierzchniowe na tle mapy przydatności}
 \end{figure}
 \vspace{10pt}
 
 \subsection{Kryterium 2: odległość od budynków mieszkalnych}
-W celu rozpatrzenia kryterium odległościowego od budynków mieszkalnych, pobrano z bazy BDOT10k poligonową warstwę o kodzie OT\_BUBD\_A, reprezentującą budynki. Następnie wybrano z nich jedynie te będące budynkami mieszkalnymi. Skorzystano w tym celu z atrybutu \textit{FOBUD} warstwy, informującego o funkcji ogólnej budynku. Budynki mieszkalne przyjmowały w tym polu wartość \textit{budynki mieszkalne}. Skonstruowano więc zapytanie i wybrano zgodne obiekty, korzystając z funkcji \textit{Select} z zestawu {Analysis}.
+W celu rozpatrzenia kryterium odległościowego od budynków mieszkalnych, pobrano z bazy BDOT10k poligonową warstwę z obiektami o kodzie OT\_BUBD\_A, reprezentującymi budynki. 
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-arcpy.analysis.Select(budynki, 'budynki_mieszkalne', "FOBUD = 'budynki mieszkalne'")
+buildings = arcpy.management.Merge([f'{geobaza}\\BUBD_A_0210', f'{geobaza}\\BUBD_A_0212'], 'buildings')
 \end{mintedbox}
 \vspace{10pt}
 
-Następnie utworzono raster reprezentujący odległość od budynku mieszkalnego dla każdej komórki z użyciem narzędzia \textit{DistanceAccumulation}.
+Następnie wybrano z nich jedynie te będące budynkami mieszkalnymi. Skorzystano w tym celu z atrybutu \textit{FOBUD}, informującego o funkcji ogólnej budynku. Skonstruowano odpowiednie zapytanie i wybrano zgodne obiekty, korzystając z funkcji \textit{Select}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-out_distance_accumulation_buildings = arcpy.sa.DistanceAccumulation(in_source_data='budynki_mieszkalne')
+arcpy.analysis.Select(buildings, 'residential_buildings', "FOBUD = 'budynki mieszkalne'")
 \end{mintedbox}
 \vspace{10pt}
 
-Dla utworzonej warstwy dokonano określenia członkostwa z użyciem rosnącej funkcji liniowej. Funkcja każdej komórce odległej od budynku mieszkalnego o mniej niż 150 metrów przyporządkowywała zerową przydatność. Dla obszarów odległych od 150 do 300 metrów przydatność liniowo rosła, i od 300 metrów w górę przyjmowała maksymalną przydatność.
+Z użyciem narzędzia \textit{Distance Accumulation} utworzono mapę odległości, na której każdemu pikselowi przypisano wartość odległości do najbliższego budynku mieszkalnego.
+
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-budynki_mieszkalne = arcpy.sa.FuzzyMembership(out_distance_accumulation_buildings, fuzzy_function="LINEAR 150 300")
+buildings_accumulation = arcpy.sa.DistanceAccumulation(in_source_data='residential_buildings')
 \end{mintedbox}
+\vspace{10pt}
+
+Dla utworzonej warstwy dokonano określenia członkostwa z użyciem rosnącej funkcji liniowej.
+
+\begin{mintedbox}{python}
+residential_buildings = arcpy.sa.FuzzyMembership(buildings_accumulation, fuzzy_function="LINEAR 150 300")
+\end{mintedbox}
+
+\vspace{5pt}
+
+\begin{enumerate}[label=•]
+    \item wartości \( \leq 150 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \geq 300 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 150 a 300 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 150
+\end{enumerate}
 \vspace{10pt}
 
 Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
@@ -247,12 +305,14 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{img/kryterium2-wykres-glowny.png}
-    \caption*{Reklasyfikacja dla kryterium 2.}
+    \caption{Reklasyfikacja dla kryterium 2.}
 \end{figure}
 
-\newpage
+Wynikiem analizy dla kryterium drugiego była poniższa mapa. 
 
-Wynikiem analizy dla kryterium drugiego była poniższa mapa. Wyklucza ona z przydatności znaczną część obszaru położoną w południowej oraz środkowo-zachodniej części gminy. Północna, zachodnia oraz centralna część obszaru przyjmuje maksymalną przydatność.
+Obszary czarne (nieprzydatne) tworzą 2 wzory, które koncentrują się w południowo-wschodniej oraz północno-zachodniej części terenu i rozgałęziają się w różne strony. Tereny o najwyższej przydatności (białe) występują w formie większych, zwartych obszarów, szczególnie w północnej, centralnej i zachodniej części mapy.
+Widoczne są również szare strefy przejściowe, które reprezentują tereny o pośredniej przydatności.
+
 \vspace{5pt}
 
 \begin{figure}[H]
@@ -262,39 +322,47 @@ Wynikiem analizy dla kryterium drugiego była poniższa mapa. Wyklucza ona z prz
 \end{figure}
 \vspace{10pt}
 
-Mapę zapisano do geobazy w celu użycia w późniejszym etapie.
-\vspace{5pt}
-
-\begin{mintedbox}{python}
-budynki_mieszkalne.save(f'{geobaza}\\kryterium_2')
-\end{mintedbox}
-\vspace{10pt}
-
+\newpage
 Poniżej zaprezentowano mapę przedstawiającą budynki mieszkalne na tle utworzonej mapy przydatności.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium2-budynki.jpg}
-    \caption{Mapa przydatności dla kryterium 2. zawierająca budynki mieszkalne}
+    \caption{Budynki mieszkalne na tle mapy przydatności}
 \end{figure}
 \vspace{10pt}
 
 \subsection{Kryterium 3: pokrycie terenu}
-Warstwą wejściową w kryterium trzecim, była warstwa OT\_PTLZ\_A zawierająca tereny leśne i zadrzewione. W celu obliczenia odległości komórek od terenów leśnych, wykorzystano funkcję \textit{DistanceAccumulation}.
+Warstwą wejściową w kryterium trzecim była warstwa OT\_PTLZ\_A zawierająca tereny leśne i zadrzewione. 
 \vspace{5pt}
+
+\begin{mintedbox}{python}
+ptlz = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_0212'], 'ptlz')
+\end{mintedbox}
+\vspace{10pt}
+
+W celu obliczenia odległości komórek od terenów leśnych, wykorzystano funkcję \textit{Distance Accumulation}.
 
 \begin{mintedbox}{python}
 out_distance_accumulation_ptlz = arcpy.sa.DistanceAccumulation(in_source_data=ptlz)
 \end{mintedbox}
 \vspace{10pt}
 
-Następnie określono poziom członkostwa z użyciem FuzzyMembership. Funkcja każdej komórce odległej od lasu o mniej niż 15 metrów przyporządkowywała zerową przydatność. Dla obszarów odległych od 15 do 100 metrów przydatność liniowo rosła, przyjmując od 100 metrów w górę maksymalną przydatność.
+Następnie określono poziom członkostwa przy użyciu \textit{Fuzzy Membership}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
 lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 100")
 \end{mintedbox}
 \vspace{10pt}
+
+Dla powyższej funkcji:
+\begin{enumerate}[label=•]
+    \item wartości \( \leq 15 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \geq 100 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 15 a 100 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 15
+\end{enumerate}
+\newpage
 
 Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
 \vspace{5pt}
@@ -305,8 +373,9 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
     \caption*{Reklasyfikacja dla kryterium 3.}
 \end{figure}
 \vspace{10pt}
+Wynikiem analizy dla kryterium trzeciego była poniższa mapa.
+Obszary nieprzydatne stanowią dużą część obszaru, rozciągając się na zachodzie, w centrum oraz wzdłuż granic gminy. Przydatne są głównie duże tereny na północy gminy oraz w południowo-wschodniej części.
 
-Wynikiem analizy dla kryterium drugiego była poniższa mapa. Ze względu na wysoką lesistość lub niewielką odległość od lasu większość obszaru gminy została wyeliminowana. Przydatny pozostał obszar w północnej części gminy oraz częściowo w południowo-wschodniej.
 \vspace{5pt}
 
 \begin{figure}[H]
@@ -316,26 +385,26 @@ Wynikiem analizy dla kryterium drugiego była poniższa mapa. Ze względu na wys
 \end{figure}
 \vspace{10pt}
 
-Mapę zapisano do geobazy w celu użycia w późniejszym etapie.
-\vspace{5pt}
-
-\begin{mintedbox}{python}
-lasy_fuzzy.save(f'{geobaza}\\kryterium_3')
-\end{mintedbox}
-\vspace{10pt}
-
-Poniżej zaprezentowano mapę przedstawiającą lasy na tle utworzonej mapy przydatności.
+Poniżej zaprezentowano mapę przedstawiającą lasy na tle utworzonej mapy przydatności. 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium3-lasy.jpg}
-    \caption{Mapa przydatności dla kryterium 3. zawierająca lasy}
+    \caption{Lasy na tle mapy przydatności}
 \end{figure}
 \vspace{10pt}
 
 
 \subsection{Kryterium 4: dostęp do dróg utwardzonych}
-Drogi pobrano z bazy BDOT10k, wybierając obiekty o klasie OT\_SKDR\_L. Ze wszystkich dróg wybrano jedynie te utwardzone, tj. których materiał nawierzchni to beton, bruk, kostka kamienna, kostka prefabrykowana, masa bitumiczna lub płyty betonowe.
+Drogi pobrano z bazy BDOT10k, wybierając obiekty o klasie OT\_SKDR\_L. 
+\vspace{5pt}
+
+\begin{mintedbox}{python}
+drogi = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'drogi')
+\end{mintedbox}
+\vspace{10pt}
+
+Ze wszystkich dróg wybrano jedynie te utwardzone, tj. takie, których materiał nawierzchni to beton, bruk, kostka kamienna, kostka prefabrykowana, masa bitumiczna lub płyty betonowe.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -357,7 +426,7 @@ density = arcpy.sa.LineDensity(
 \end{mintedbox}
 \vspace{10pt}
 
-Aby móc uzależnić funkcję reklasyfikacyjną od wartości rastra, liczy się maksymalna wartość gęstości dróg w obszarze.
+Aby móc uzależnić funkcję reklasyfikacyjną od wartości rastra, liczona jest maksymalna wartość gęstości dróg w obszarze z użyciem narzędzia \textit{Calculate Statistics}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -365,8 +434,9 @@ arcpy.management.CalculateStatistics(density)
 max_value = density.maximum
 \end{mintedbox}
 \vspace{10pt}
+\newpage
 
-Zostaje dokonana reklasyfikacja zgodnie z funkcją liniową. Wartości gęstości od 0 do 30\% przyjmują zerową przydatność, od 30\% do 70\% liniowo rosną do maksymalnej przydatności, od 70\% w górę przyjmując maksymalną przydatność.
+Przy użyciu \textit{Rescale By Function} zostaje dokonana reklasyfikacja zgodnie z funkcją liniową.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -376,6 +446,12 @@ kryterium_4 = arcpy.sa.RescaleByFunction(
     from_scale=0,
     to_scale=1   
 \end{mintedbox}
+
+\begin{enumerate}[label=•]
+    \item wartości \( \geq 50\% \) maksymalnej wartości otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 0 a 50\% otrzymują wartość członkostwa proporcjonalnie do ich odległości od 0
+\end{enumerate}
+\vspace{5pt}
 \vspace{10pt}
 
 Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
@@ -386,6 +462,11 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
     \includegraphics[width=0.6\textwidth]{img/kryterium4-wykres-glowny.png}
     \caption{Reklasyfikacja dla kryterium 4.}
 \end{figure}
+\vspace{10pt}
+
+Wynikiem analizy dla kryterium czwartego była poniższa mapa.
+
+Obszary nieprzydatne stanowią stosunkowo małą część obszaru, głównie w zachodniej i północno-wschodniej części terenu. Całkowicie przydatny jest teren oznaczony dużą białą plamą.
 
 \begin{figure}[H]
     \centering
@@ -393,19 +474,25 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
     \caption{Mapa przydatności dla kryterium 4.}
 \end{figure}
 
-\begin{mintedbox}{python}
-kryterium_4.save(f'{geobaza}\\kryterium_4')
-\end{mintedbox}
+Poniżej zaprezentowano mapę przedstawiającą drogi utwardzone na tle utworzonej wyżej mapy.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium4-drogi.jpg}
-    \caption{Mapa przydatności dla kryterium 4. zawierająca drogi utwardzone}
+    \caption{Drogi utwardzone na tle mapy przydatności}
 \end{figure}
 \vspace{10pt}
 
 \subsection{Kryterium 5: nachylenie stoków}
-W celu realizacji kryterium pobrano kafelki NMT dla obszaru gminy. Połączono je z użyciem narzędzia \textit{Mosaic To New Raster}. Dla nowo powstałego rastra obliczono procentowe nachylenia stoków z użyciem narzędzie \textit{Slope} z zestawu \textit{3D Analyst}.
+W celu realizacji kryterium pobrano kafelki NMT dla obszaru gminy. Połączono je wcześniej z użyciem narzędzia \textit{Mosaic To New Raster}. 
+\vspace{5pt}
+
+\begin{mintedbox}{python}
+nmt = f'{geobaza}\\nmt'
+\end{mintedbox}
+\vspace{10pt}
+
+Dla nowo powstałego rastra obliczono procentowe nachylenia stoków z użyciem narzędzia \textit{Slope} z zestawu \textit{3D Analyst}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -415,16 +502,22 @@ arcpy.ddd.Slope(nmt, "slope", "PERCENT_RISE", 1)
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{img/kryterium5-stoki.jpg}
+    \includegraphics[width=0.55\textwidth]{img/kryterium5-stoki.jpg}
     \caption{Mapa nachyleń stoków powstała z użyciem narzędzie \textit{Slope}}
 \end{figure}
 
-Powstały raster zreklasyfikowano, przyporządkowując stokom o nachyleniu od 0 do 7\% maksymalną przydatność, od 7 do 10 \% stopniowo spadając, przyjmując dla stoków o nachyleniu powyżej 10\% zerową przydatność.
+Powstały raster zreklasyfikowano.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
 slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 7")
 \end{mintedbox}
+
+\begin{enumerate}[label=•]
+    \item wartości \( \geq 10 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \leq 7 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 7 a 10 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 10
+\end{enumerate}
 \vspace{10pt}
 
 Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
@@ -437,7 +530,9 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
 \end{figure}
 \vspace{10pt}
 
-Kryterium eliminuje dużą część obszaru ze względu na dużą górzystość terenu. Przydatna pozostaje północna i północno-wschodnia część gminy oraz niewielkie obszary w pozostałej części gminy.
+Wynikiem analizy dla kryterium piątego była poniższa mapa.
+Obszary przydatne to duża północna, północno-wschodnia część gminy. Reszta obszaru, z wyjątkiem niewielkich przydatnych enklaw, ma niekorzystne uwarunkowania w zakresie tego kryterium.
+
 \vspace{5pt}
 
 \begin{figure}[H]
@@ -447,17 +542,9 @@ Kryterium eliminuje dużą część obszaru ze względu na dużą górzystość 
 \end{figure}
 \vspace{10pt}
 
-Mapę zapisano do geobazy w celu użycia w późniejszym etapie.
-\vspace{5pt}
-
-\begin{mintedbox}{python}
-slope_fuzzy.save(f'{geobaza}\\kryterium_5')
-\end{mintedbox}
-\newpage
-
 \subsection{Kryterium 6: dostęp do światła słonecznego}
 
-Do tego kryterium również wykorzystano NMT, a także narzędzie \textit{Aspect} z zestawu \textit{3D Analyst}.
+Do kryterium szóstego również wykorzystano NMT, a także narzędzie \textit{Aspect} z zestawu \textit{3D Analyst}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -471,17 +558,35 @@ Efektem działania funkcji był poniższy raster, przedstawiający, na którą s
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/kryterium6-aspect.jpg}
-    \caption{Mapa przydatności dla kryterium 6. zawierająca stopień wystawy słonecznej}
+    \caption{Mapa przedstawiająca wystawę słoneczną w stopniach}
 \end{figure}
 \vspace{10pt}
 
-Przydatne w kontekście naszego projektu są stoki południowo-zachodnie, południowe i południowo-wschodnie. Stworzono więc dwie funkcje reklasyfikacyjne: rosnącą od 90 do 113 stopni oraz malejącą od 248 do 270 stopni. 
-\vspace{5pt}
+Przydatne w kontekście projektu są stoki południowo-zachodnie, południowe i południowo-wschodnie. 
+Stworzono więc dwie funkcje reklasyfikacyjne.
 
 \begin{mintedbox}{python}
-aspect_fuzzy = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 113")
-aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 248")
+increasing_aspect = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 90 113")
+decreasing_aspect = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 248")
 \end{mintedbox}
+
+\vspace{10pt}
+
+Dla funkcji rosnącej:
+
+\begin{enumerate}[label=•]
+    \item wartości \( \leq 90 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \geq 113 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 90 a 113 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 90
+\end{enumerate}
+\vspace{10pt}
+
+Dla funkcji malejącej:
+\begin{enumerate}[label=•]
+    \item wartości \( \geq 270 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości \( \leq 248 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy 248 a 270 otrzymują wartość członkostwa proporcjonalnie do ich odległości od 270
+\end{enumerate}
 \vspace{10pt}
 
 \begin{figure}[H]
@@ -497,13 +602,13 @@ aspect_fuzzy_1 = arcpy.sa.FuzzyMembership(aspect, fuzzy_function="LINEAR 270 248
         \caption{Funkcja malejąca}
     \end{minipage}
 \end{figure}
-\newpage
+\vspace{10pt}
 
-Ostateczny wynik kryterium szóstego uzyskano po połączeniu obu warstw utworzonych wcześniej przy użyciu fuzzy logic. Wykorzystano do tego narzędzie \textit{FuzzyOverlay}.
+Ostateczny wynik kryterium szóstego uzyskano po połączeniu obu warstw utworzonych wcześniej przy użyciu logiki rozmytej. Wykorzystano do tego narzędzie \textit{FuzzyOverlay}.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
+aspect_overlay = arcpy.sa.FuzzyOverlay([increasing_aspect, decreasing_aspect], 'AND')
 \end{mintedbox}
 \vspace{5pt}
 
@@ -514,31 +619,29 @@ aspect_overlay = arcpy.sa.FuzzyOverlay([aspect_fuzzy, aspect_fuzzy_1], 'AND')
 \end{figure}
 \vspace{10pt}
 
-Kryterium wyłoniło tereny przydatne w północno-zachodniej, środkowej oraz południowo-wschodniej części obszaru. Znaczna część terenów charakteryzuje się niekorzystną wystawą słoneczną.
+Kryterium wyłoniło tereny przydatne w północno-zachodniej, środkowej oraz południowo-wschodniej części obszaru. Znaczna część terenów charakteryzuje się niekorzystną wystawą słoneczną. Da się wyróżnić kilka płatów terenu o dobrych warunkach w różnych częściach gminy.
 \vspace{5pt}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/kryterium6-layout.jpg}
+    \includegraphics[width=0.6\textwidth]{img/kryterium6-layout.jpg}
     \caption{Mapa przydatności dla kryterium 6.}
 \end{figure}
 \vspace{10pt}
 
-Mapę zapisano do geobazy w celu użycia w późniejszym etapie.
+\newpage
+\subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
+Warstwę wektorową zawierającą istotne drogowe węzły komunikacyjne utworzono manualnie na podstawie warstwy OT\_SKDR\_L z bazy BDOT10k. Przefiltrowano drogi, pozostawiając jedynie najważniejsze z nich - krajowe, wojewódzkie. Utworzono warstwę punktową, na której umieszczono kilka punktów w miejscach styku tych dróg. Następnie, korzystając z wtyczki \textit{QNEAT3 - QGIS Network Analysis Toolbox 3} oraz dostępnego w niej algorytmu \textit{Iso-Area as Interpolation (from Layer)}. Na podstawie sieci dróg, utworzyła ona raster zawierający dla każdej komórki odległość od węzła komunikacyjnego.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-aspect_overlay.save(f'{geobaza}\\kryterium_6')
+wezly = f'{geobaza}\\wezly_raster'
 \end{mintedbox}
-
-\newpage
-\subsection{Kryterium 7: dojazd do istotnych drogowych węzłów komunikacyjnych}
-Warstwę rastrową zawierającą istotne drogowe węzły komunikacyjne utworzono manualnie na podstawie warstwy OT\_SKDR\_L z bazy BDOT10k. Przefiltrowano drogi, pozostawiając jedynie najważniejsze z nich - krajowe, wojewódzkie. Utworzono warstwę punktową, na której umieszczono kilka punktów w miejscach styku tych dróg. Następnie, korzystając z wtyczki \textit{QNEAT3 - QGIS Network Analysis Toolbox 3} oraz dostępnego w niej algorytmu \textit{Iso-Area as Interpolation (from Layer)}. Na podstawie sieci dróg, utworzyła ona raster zawierający dla każdej komórki odległość od węzła komunikacyjnego.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/kryterium7-wezly.jpg}
-    \caption{Raster utworzony poprzez wtyczkę \textit{QNEAT3}}
+    \includegraphics[width=0.65\textwidth]{img/kryterium7-wezly.jpg}
+    \caption{Raster utworzony poprzez wtyczkę QGIS  \textit{QNEAT3}}
 \end{figure}
 \vspace{10pt}
 
@@ -550,7 +653,19 @@ wezly_max = float(arcpy.management.GetRasterProperties(wezly, "MAXIMUM")[0].repl
 \end{mintedbox}
 \vspace{10pt}
 
-Sprawdzono członkostwo na podstawie funkcji liniowej, komórkom od maksymalnej odległości od węzła do połowy maksymalnej odległości od węzła przypisując odpowiednią wartość funkcji, a komórkom położonym bliżej przyporządkowując maksymalną przydatność. 
+Sprawdzono członkostwo na podstawie funkcji liniowej.
+\vspace{5pt}
+
+\begin{mintedbox}{python}
+wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {wezly_max} {0.5 * wezly_max}")
+\end{mintedbox}
+\vspace{5pt}
+
+\begin{enumerate}[label=•]
+    \item wartości \( \leq \) połowy maksymalnej odległości od węzła otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości pomiędzy maksymalną odległością od węzła a połową maksymalnej odległości od węzła otrzymują wartość członkostwa proporcjonalnie do ich odległości od maksymalnej odległości od węzła
+\end{enumerate}
+
 \vspace{5pt}
 
 \begin{figure}[H]
@@ -560,7 +675,7 @@ Sprawdzono członkostwo na podstawie funkcji liniowej, komórkom od maksymalnej 
 \end{figure}
 \vspace{10pt}
 
-Tereny położone w centralnej części rastra okazały się być najbardziej przydatne. Skraje najbardziej na południe oraz północno-wschodnie mają najniższą przydatność.
+Tereny położone w centralnej części rastra okazały się być najbardziej przydatne. Skraje najbardziej na południe oraz północny wschód mają najniższą przydatność.
 \vspace{5pt}
 
 \begin{figure}[H]
@@ -569,13 +684,6 @@ Tereny położone w centralnej części rastra okazały się być najbardziej pr
     \caption{Mapa przydatności dla kryterium 7.}
 \end{figure}
 \vspace{10pt}
-
-Mapę zapisano do geobazy w celu użycia w późniejszym etapie.
-\vspace{5pt}
-
-\begin{mintedbox}{python}
-wezly_fuzzy.save(f'{geobaza}\\kryterium_7')
-\end{mintedbox}
 
 \newpage
 \subsection{Ocena przydatności terenu}
@@ -767,15 +875,16 @@ arcpy.management.SelectLayerByAttribute("poligon_przydatnosci_layer", "NEW_SELEC
 \end{mintedbox}
 \vspace{10pt}
 
-Warstwa z przydatnymi poligonami jest zapisywana w geobazie.
+W następnym kroku należało wykorzystać już warstwę z działkami. Warstwę działek pobrano poprzez usługę WFS odpowiedniej ewidencji gruntów i budynków.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-arcpy.management.CopyFeatures("poligon_przydatnosci_layer", f"{geobaza}\\{wariant}_poligon_przydatnosci")
+dzialki = f'{geobaza}\\dzialki'
 \end{mintedbox}
 \vspace{10pt}
 
-Następnie z użyciem funkcji \textit{Summarize Within}, dla każdej działki jest liczona powierzchnia, jaką stanowią dla niej poligony przydatne.
+Następnie z użyciem funkcji \textit{Summarize Within}, dla każdej działki jest liczona powierzchnia, jaką stanowią dla niej poligony przydatne. 
+
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -936,7 +1045,14 @@ farmy przyłącza przedstawia tabela.
 \end{table}
 \vspace{10pt}
 
-W warstwie powstałej ze złączenia wszystkich warstw pokrycia terenu z BDOT10k utworzono pole \textit{cost} i przyporządkowano mu odpowiednią wartość w zależności od typu obiektu. Wykorzystano do tego atrybut \textit{x\_kod}, który znajdował się w każdej z warstw i jednoznacznie identyfikował typ pokrycia terenu.
+Aby uzyskać jedną warstwę z informacją o pokryciu terenu i móc podporządkować każdemu z nich odpowiedni koszt, połączono wszystkie warstwy pokrycia terenu z BDOT10k.
+\vspace{5pt}
+
+\begin{mintedbox}{python}
+pt_merged = f'{geobaza}\\PT_merged'
+\end{mintedbox}
+
+W powstałej warstwie utworzono pole \textit{cost} i przyporządkowano mu odpowiednią wartość w zależności od typu obiektu. Wykorzystano do tego atrybut \textit{x\_kod}, który znajdował się w każdej z warstw i jednoznacznie identyfikował typ pokrycia terenu.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
@@ -1348,33 +1464,17 @@ Niewielkie obszary przydatne, jakie pozostały po połączeniu kryteriów, znajd
 \end{figure}
 \subsection{Wybór przydatnych działek}
 
-Pomimo nikłej obecności terenów przydatnych pod tę inwestycję w gminie, udało się wyłonić 4 grupy działek (z czego 2 z nich są przecięte jedynie drogą, więc możnaby je połączyć).
+Pomimo nikłej obecności terenów przydatnych pod tę inwestycję w gminie, udało się wyłonić te same 2 grupy działek dla obu wariantów.
 
 \begin{figure}[H]
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-przydatne-dzialki.jpg}
-        \caption{Mapa przedstawiająca przydatne działki - wagi równe}
-        \label{fig:przydatne-dzialki-rowne}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-przydatne-dzialki.jpg}
-        \caption{Mapa przedstawiająca przydatne działki - wagi różne}
-        \label{fig:przydatne-dzialki-rozne}
-    \end{minipage}
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-przydatne-dzialki.jpg}
+    \caption{Mapa przedstawiająca przydatne działki}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-przydatne-ortofoto.jpg}
-    \caption{Mapa przedstawiająca przydatne działki na ortofotomapie}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-przydatne-ortofoto-2.jpg}
     \caption{Mapa przedstawiająca przydatne działki na ortofotomapie}
 \end{figure}
 
@@ -1386,51 +1486,21 @@ Pomimo nikłej obecności terenów przydatnych pod tę inwestycję w gminie, uda
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-cost-backlink.jpg}
-        \caption{Mapa kierunków (backlink) - równe wagi}
-        \label{fig:backlink-rowne}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-cost-backlink.jpg}
-        \caption{Mapa kierunków (backlink) - różne wagi}
-        \label{fig:backlink-rozne}
-    \end{minipage}
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-cost-backlink.jpg}
+    \caption{Mapa kierunków (backlink)}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-cost-distance.jpg}
-        \caption{Mapa kosztów skumulowanych - równe wagi}
-        \label{fig:cost-distance-rowne}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-cost-distance.jpg}
-        \caption{Mapa kosztów skumulowanych - różne wagi}
-        \label{fig:cost-distance-rozne}
-    \end{minipage}
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-cost-distance.jpg}
+    \caption{Mapa kosztów skumulowanych}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-dzialki-linie.jpg}
-        \caption{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne - równe wagi}
-        \label{fig:dzialki-linie-rowne}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/plesna-dzialki-linie.jpg}
-        \caption{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne - różne wagi}
-        \label{fig:dzialki-linie-rozne}
-    \end{minipage}
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-linie.jpg}
+    \caption{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne}
 \end{figure}
 
 Przez jedną z wytypowanych grup działek przechodzi już linia elektroenergetyczna, w związku z czym ścieżka przyłącza nie została utworzona.
