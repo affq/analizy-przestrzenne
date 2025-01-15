@@ -62,7 +62,7 @@ min_value = density.minimum
 
 kryterium_4 = arcpy.sa.RescaleByFunction(
     in_raster=density,
-    transformation_function=f"LINEAR {max_value} {min_value}",
+    transformation_function=f"LINEAR 0 {0.5 * max_value}",
     from_scale=0,
     to_scale=1   
 )

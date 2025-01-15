@@ -63,7 +63,7 @@ max_value = density.maximum
 
 kryterium_4 = arcpy.sa.RescaleByFunction(
     in_raster=density,
-    transformation_function=f"LINEAR {0.3 * max_value} {0.7 * max_value}",
+    transformation_function=f"LINEAR 0 {0.5 * max_value}",
     from_scale=0,
     to_scale=1   
 )
@@ -102,7 +102,7 @@ def licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, wa
     wynik_reclassified = arcpy.sa.Reclassify(iloczyn, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci * max_przydatnosc, 0], [prog_przydatnosci * max_przydatnosc, 1, 1]]))
     wynik_reclassified.save(f'{geobaza}\\{wariant}_wynik_reclassified')
 
-def wybierz_przydatne_dzialki(wariant, prog_przydatnosci):
+def wybierz_przydatne_dzialki(wariant, prog_przydatnosci, prog_powierzchni):
     arcpy.conversion.RasterToPolygon(f'{geobaza}\\{wariant}_wynik_reclassified', 'poligon_przydatnosci', "NO_SIMPLIFY", "VALUE")
     arcpy.management.MakeFeatureLayer('poligon_przydatnosci', "poligon_przydatnosci_layer")
     arcpy.management.SelectLayerByAttribute("poligon_przydatnosci_layer", "NEW_SELECTION", "gridcode = 1")
@@ -126,7 +126,7 @@ def wybierz_przydatne_dzialki(wariant, prog_przydatnosci):
         field_type="FLOAT"
     )
 
-    dzialki_przydatne_powyzej_progu = arcpy.management.SelectLayerByAttribute(f'{geobaza}\\{wariant}_summarized_within', "NEW_SELECTION", f"pow_przyd >= 60")
+    dzialki_przydatne_powyzej_progu = arcpy.management.SelectLayerByAttribute(f'{geobaza}\\{wariant}_summarized_within', "NEW_SELECTION", f"pow_przyd >= {prog_przydatnosci}")
     arcpy.management.CopyFeatures(dzialki_przydatne_powyzej_progu, f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej")
 
     arcpy.management.Dissolve(
@@ -139,7 +139,7 @@ def wybierz_przydatne_dzialki(wariant, prog_przydatnosci):
 
     arcpy.management.MakeFeatureLayer(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve", f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer")
     arcpy.management.SelectLayerByAttribute(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer", "NEW_SELECTION", "Shape_Area >= 20000")
-    arcpy.management.CopyFeatures(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer", f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_przydatnosci}")
+    arcpy.management.CopyFeatures(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer", f"{geobaza}\\{wariant}_grupy_dzialek_przydatne_powyzej_{prog_powierzchni}")
 
 def stworz_przylacze(wariant, prog_przydatnosci):
     pt_merged_layer = "pt_merged_layer"
@@ -217,6 +217,6 @@ def stworz_przylacze(wariant, prog_przydatnosci):
 def licz(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci_piksela, prog_przydatnosci_powierzchni):
     prog_przydatnosci_piksela = prog_przydatnosci_piksela / 100
     licz_przydatnosc(wariant, waga_woda, waga_budynki, waga_lasy, waga_drogi, waga_wysokosc, waga_aspect, waga_wezly, prog_przydatnosci_piksela)
-    wybierz_przydatne_dzialki(wariant, prog_przydatnosci_powierzchni)
+    wybierz_przydatne_dzialki(wariant, prog_przydatnosci_piksela, prog_przydatnosci_powierzchni)
     stworz_przylacze(wariant, prog_przydatnosci_powierzchni)
                      
