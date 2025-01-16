@@ -89,6 +89,7 @@ W kontekście prawnym, kluczowe akty regulujące proces lokalizacji i budowy far
     \item Ustawa z dnia 20 lutego 2015 r. o odnawialnych źródłach energii
     \item Ustawa z dnia 3 lutego 1995 r. o ochronie gruntów rolnych i leśnych
 \end{enumerate}
+\newpage
 
 \section{Cel projektu}
 
@@ -139,22 +140,17 @@ import arcpy.sa
 \end{mintedbox}
 \vspace{10pt}
 
-Przed rozpoczęciem pracy z danymi należało ustalić odpowiednie parametry środowiska. Ustalono odpowiedni folder odczytu i zapisu danych na geobazę projektu, w której znajdowały się odpowiednie dane. Ustawiono układ współrzędnych na EPSG:2180 oraz rozmiar komórki na 5, zgodny z rozmiarem pobranego przez nas rastra NMT. Zakres oraz maskę projektu dostosowano do powierzchni warstwy, zawierającej ???-metrowy bufor wokół terenu gminy. Ustalono również nadpisywanie warstw w przypadku, jeżeli warstwa o tej samej nazwie już by istniała w folderze.
+Przed rozpoczęciem pracy z danymi należało ustalić odpowiednie parametry środowiska. Ustalono odpowiedni folder odczytu i zapisu danych na geobazę projektu, w której znajdowały się odpowiednie dane. Ustawiono układ współrzędnych na EPSG:2180 oraz rozmiar komórki na 5, zgodny z rozmiarem pobranego przez nas rastra NMT. Zakres oraz maskę projektu dostosowano do powierzchni warstwy, zawierającej 200-metrowy bufor wokół terenu gminy. Ustalono również nadpisywanie warstw w przypadku, jeżeli warstwa o tej samej nazwie już by istniała w folderze.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-geobaza = r"C:\Users\adria\Desktop\STUDIA_FOLDERY\analizy\MyProject12\MyProject12.gdb"
+geobaza = "ścieżka_do_geobazy"
 arcpy.env.workspace = "in_memory"
 arcpy.env.outputCoordinateSystem = arcpy.SpatialReference("ETRS_1989_Poland_CS92")
 arcpy.env.extent = f"{geobaza}\\gmina_buffer"
 arcpy.env.mask = f"{geobaza}\\gmina_buffer"
 arcpy.env.cellSize = 5
 arcpy.env.overwriteOutput = True
-\end{mintedbox}
-\vspace{10pt}
-
-\begin{mintedbox}{python}
-linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
 \end{mintedbox}
 \vspace{10pt}
 
@@ -337,14 +333,14 @@ Warstwą wejściową w kryterium trzecim była warstwa OT\_PTLZ\_A zawierająca 
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-ptlz = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_0212'], 'ptlz')
+trees = arcpy.management.Merge([f'{geobaza}\\PTLZ_A_0210', f'{geobaza}\\PTLZ_A_0212'], 'trees')
 \end{mintedbox}
 \vspace{10pt}
 
 W celu obliczenia odległości komórek od terenów leśnych, wykorzystano funkcję \textit{Distance Accumulation}.
 
 \begin{mintedbox}{python}
-out_distance_accumulation_ptlz = arcpy.sa.DistanceAccumulation(in_source_data=ptlz)
+trees_accumulation = arcpy.sa.DistanceAccumulation(in_source_data=trees)
 \end{mintedbox}
 \vspace{10pt}
 
@@ -352,7 +348,7 @@ Następnie określono poziom członkostwa przy użyciu \textit{Fuzzy Membership}
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-lasy_fuzzy = arcpy.sa.FuzzyMembership(out_distance_accumulation_ptlz, fuzzy_function="LINEAR 15 100")
+trees_map = arcpy.sa.FuzzyMembership(trees_accumulation, fuzzy_function="LINEAR 15 100")
 \end{mintedbox}
 \vspace{10pt}
 
@@ -370,7 +366,7 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{img/kryterium3-wykres-glowny.png}
-    \caption*{Reklasyfikacja dla kryterium 3.}
+    \caption{Reklasyfikacja dla kryterium 3.}
 \end{figure}
 \vspace{10pt}
 Wynikiem analizy dla kryterium trzeciego była poniższa mapa.
@@ -400,7 +396,7 @@ Drogi pobrano z bazy BDOT10k, wybierając obiekty o klasie OT\_SKDR\_L.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-drogi = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'drogi')
+roads = arcpy.management.Merge([f'{geobaza}\\SKDR_L_0210', f'{geobaza}\\SKDR_L_0212'], 'roads')
 \end{mintedbox}
 \vspace{10pt}
 
@@ -408,16 +404,16 @@ Ze wszystkich dróg wybrano jedynie te utwardzone, tj. takie, których materiał
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-drogi_utwardzone = arcpy.analysis.Select(drogi, 'drogi_utwardzone', "MATE_NAWIE IN ('beton', 'bruk', 'kostka kamienna', 'kostka prefabrykowana', 'masa bitumiczna', 'płyty betonowe')")
+selected_roads = arcpy.analysis.Select(roads, 'selected_roads', "MATE_NAWIE IN ('beton', 'bruk', 'kostka kamienna', 'kostka prefabrykowana', 'masa bitumiczna', 'płyty betonowe')")
 \end{mintedbox}
 \vspace{10pt}
 
-Korzystając z narzędzia \textit{LineDensity} utworzono raster z gęstością dróg utwardzonych na km².
+Korzystając z narzędzia \textit{Line Density} utworzono raster z gęstością dróg utwardzonych na km².
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-density = arcpy.sa.LineDensity(
-    in_polyline_features=drogi_utwardzone,
+roads_density = arcpy.sa.LineDensity(
+    in_polyline_features=selected_roads,
     population_field=None,
     cell_size=5,
     search_radius=1000,
@@ -430,8 +426,8 @@ Aby móc uzależnić funkcję reklasyfikacyjną od wartości rastra, liczona jes
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-arcpy.management.CalculateStatistics(density)
-max_value = density.maximum
+arcpy.management.CalculateStatistics(roads_density)
+max_value = roads_density.maximum
 \end{mintedbox}
 \vspace{10pt}
 \newpage
@@ -441,10 +437,11 @@ Przy użyciu \textit{Rescale By Function} zostaje dokonana reklasyfikacja zgodni
 
 \begin{mintedbox}{python}
 kryterium_4 = arcpy.sa.RescaleByFunction(
-    in_raster=density,
+    in_raster=roads_density,
     transformation_function=f"LINEAR 0 {0.5 * max_value}",
     from_scale=0,
     to_scale=1   
+)
 \end{mintedbox}
 
 \begin{enumerate}[label=•]
@@ -466,7 +463,7 @@ Reklasyfikacji dokonano zgodnie z funkcją przedstawioną poniżej.
 
 Wynikiem analizy dla kryterium czwartego była poniższa mapa.
 
-Obszary nieprzydatne stanowią stosunkowo małą część obszaru, głównie w zachodniej i północno-wschodniej części terenu. Całkowicie przydatny jest teren oznaczony dużą białą plamą.
+Obszary nieprzydatne stanowią stosunkowo małą część obszaru, głównie w zachodniej i północno-wschodniej części terenu. Całkowicie przydatny jest teren oznaczony dużą białą plamą w środkowo-wschodniej części.
 
 \begin{figure}[H]
     \centering
@@ -510,7 +507,7 @@ Powstały raster zreklasyfikowano.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-slope_fuzzy = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 7")
+slope_map = arcpy.sa.FuzzyMembership("slope", fuzzy_function="LINEAR 10 7")
 \end{mintedbox}
 
 \begin{enumerate}[label=•]
@@ -657,7 +654,7 @@ Sprawdzono członkostwo na podstawie funkcji liniowej.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {wezly_max} {0.5 * wezly_max}")
+wezly_map = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {wezly_max} {0.5 * wezly_max}")
 \end{mintedbox}
 \vspace{5pt}
 
@@ -675,7 +672,7 @@ wezly_fuzzy = arcpy.sa.FuzzyMembership(wezly, fuzzy_function=f"LINEAR {wezly_max
 \end{figure}
 \vspace{10pt}
 
-Tereny położone w centralnej części rastra okazały się być najbardziej przydatne. Skraje najbardziej na południe oraz północny wschód mają najniższą przydatność.
+Tereny w centralnej części rastra okazały się być najbardziej przydatne. Skraje najbardziej na południe oraz północny wschód mają najniższą przydatność.
 \vspace{5pt}
 
 \begin{figure}[H]
@@ -700,7 +697,6 @@ Następnie tworzy sumę ważoną wszystkich z kryteriów.
 
 \begin{mintedbox}{python}
 weighted_sum = arcpy.sa.WeightedSum(tabela_kryteriow)
-weighted_sum.save(f'{geobaza}\\{wariant}_suma_rozmyte')
 \end{mintedbox}
 \vspace{10pt}
 
@@ -782,8 +778,7 @@ Później brane są pod uwagę kryteria ostre, tj. 100-metrowa strefa ochronna o
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-kryteria_ostre = arcpy.sa.FuzzyOverlay([woda_rosnaca, f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
-kryteria_ostre.save(f'{geobaza}\\kryteria_ostre')
+kryteria_ostre = arcpy.sa.FuzzyOverlay([increasing_water, f"{geobaza}\\kryterium_2", f"{geobaza}\\kryterium_3"], 'AND')
 \end{mintedbox}
 \vspace{10pt}
 
@@ -798,8 +793,7 @@ Następnie zostaje utworzony iloczyn kryteriów ostrych i rozmytych. W ten spos�
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-iloczyn = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
-iloczyn.save(f'{geobaza}\\{wariant}_wynik')
+kryteria_polaczone = arcpy.sa.FuzzyOverlay([kryteria_ostre, weighted_sum], 'AND')
 \end{mintedbox}
 \vspace{10pt}
 
@@ -825,8 +819,8 @@ Przed reklasyfikacją, obliczana jest maksymalna przydatność na obszarze.
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-arcpy.management.CalculateStatistics(iloczyn)
-max_przydatnosc = iloczyn.maximum
+arcpy.management.CalculateStatistics(kryteria_polaczone)
+max_przydatnosc = kryteria_polaczone.maximum
 \end{mintedbox}
 \vspace{10pt}
 
@@ -834,8 +828,7 @@ Utworzony przez połączenie kryteriów ostrych i rozmytych raster reklasyfikuje
 \vspace{5pt}
 
 \begin{mintedbox}{python}
-wynik_reclassified = arcpy.sa.Reclassify(iloczyn, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci * max_przydatnosc, 0], [prog_przydatnosci * max_przydatnosc, 1, 1]]))
-wynik_reclassified.save(f'{geobaza}\\{wariant}_wynik_reclassified')
+wynik_reclassified = arcpy.sa.Reclassify(kryteria_polaczone, "VALUE", arcpy.sa.RemapRange([[0, prog_przydatnosci * max_przydatnosc, 0], [prog_przydatnosci * max_przydatnosc, 1, 1]]))
 \end{mintedbox}
 \vspace{5pt}
 
@@ -937,7 +930,7 @@ concatenation_separator=""
 \end{mintedbox}
 \vspace{10pt}
 
-W ostatnim kroku wybierane są działki lub grupy działek o łącznej powierzchni powyżej 2ha (20 000 m2).
+W ostatnim kroku wybierane są działki lub grupy działek o łącznej powierzchni powyżej 2ha (20 000 m²).
 
 \begin{mintedbox}{python}
 arcpy.management.MakeFeatureLayer(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve", f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_dissolve_layer")
@@ -949,14 +942,14 @@ arcpy.management.CopyFeatures(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_d
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/przydatne-dzialki.jpg}
-        \caption{Mapa przedstawiająca przydatne działki - wagi równe}
+        \caption{Mapa przedstawiająca przydatne grupy działek - wagi równe}
         \label{fig:przydatne-dzialki-rowne}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/roznewagi-przydatne-dzialki.jpg}
-        \caption{Mapa przedstawiająca przydatne działki - wagi różne}
+        \caption{Mapa przedstawiająca przydatną grupę działek - wagi różne}
         \label{fig:przydatne-dzialki-rozne}
     \end{minipage}
 \end{figure}
@@ -966,22 +959,22 @@ arcpy.management.CopyFeatures(f"{geobaza}\\{wariant}_dzialki_przydatne_powyzej_d
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/dzialki-przydatne-ortofoto.jpg}
-        \caption{Mapa przedstawiająca przydatne działki na ortofotomapie - wagi równe}
+        \caption{Mapa przedstawiająca przydatne grupy działek na ortofotomapie - wagi równe}
         \label{fig:dzialki-ortofoto-rowne}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/roznewagi-dzialki-przydatne-ortofoto.jpg}
-        \caption{Mapa przedstawiająca przydatne działki na ortofotomapie - wagi różne}
+        \caption{Mapa przedstawiająca przydatną grupę działek na ortofotomapie - wagi różne}
         \label{fig:dzialki-ortofoto-rozne}
     \end{minipage}
 \end{figure}
 
 \subsection{Koszt przyłącza do sieci SN}
 Przed rozpoczęciem analiz należało stworzyć tzw. mapę kosztów względnych(jednostkowych), która przedstawia faktyczną lub umowną wartość kosztu zbudowania
-przyłącza przez dany obszar. Dla mapy kosztów względnych w postaci rastrowej, będzie to względny koszt budowy przyłącza na obszarze o powierzchni odpowiadającej rozmiarowi
-piksela. W ćwiczeniu przyjęto, że koszt = 1 jest odniesiony do obszarów rolniczych (najmniejszy koszt prac ziemnych / budowlanych dla 1 piksela). Koszty względne dla innych obszarów są obliczane jako wielokrotność kosztów dla terenów rolniczych. Przypisane koszty dla wszystkich kategorii użytkowania terenu dla doprowadzenia do
+przyłącza przez dany obszar. Dla mapy kosztów względnych w postaci rastrowej, jest to względny koszt budowy przyłącza na obszarze o powierzchni odpowiadającej rozmiarowi
+piksela. W ćwiczeniu przyjęto, że koszt = 1 jest odniesiony do obszarów rolniczych. Koszty względne dla innych obszarów są obliczane jako wielokrotność kosztów dla terenów rolniczych. Przypisane koszty dla wszystkich kategorii użytkowania terenu dla doprowadzenia do
 farmy przyłącza przedstawia tabela.
 
 \begin{figure}[H]
@@ -994,56 +987,12 @@ farmy przyłącza przedstawia tabela.
 
 \begin{table}[ht]
     \centering % Wyśrodkowanie tabeli
-    \renewcommand{\arraystretch}{1.2} % Zwiększenie odstępów między wierszami
-    % \begin{tabular}{|p{2cm}|p{4.5cm}|p{2cm}|p{3cm}|p{2cm}|}
-    % \hline
-    % \textbf{Kod klasy obiektów BDOT} & \textbf{Nazwa klasy obiektów BDOT} & \textbf{X\_kod} & \textbf{Typ obiektu} & \textbf{Koszt względny} \\
-    % \hline
-    % PTWP & woda powierzchniowa & PTWP01 & woda morska & 0 $\rightarrow$ NoData \\ \cline{3-5}
-    % & & PTWP02 & woda płynąca & 200 \\ \cline{3-5}
-    % & & PTWP03 & woda stojąca & 0 $\rightarrow$ NoData \\ 
-    % \hline
-    % PTZB & zabudowa & PTZB02 & jednorodzinna & 100 \\ \cline{3-5}
-    % & & PTZB01 & wielorodzinna & 200 \\ \cline{3-5}
-    % & & PTZB05 & pozostała \newline zabudowa & 50 \\ \cline{3-5}
-    % & & PTZB04 & handlowo-usługowa & 200 \\ \cline{3-5}
-    % & & PTZB03 & przemysłowo-składowa & 200 \\ 
-    % \hline
-    % PTLZ & teren leśny i zadrzewiony & PTLZ01 & las & 100 \\ \cline{3-5}
-    % & & PTLZ02 & zagajnik & 50 \\ \cline{3-5}
-    % & & PTLZ03 & zadrzewienie & 50 \\ 
-    % \hline
-    % PTRK & roślinność krzewiasta & PTRK01 & kępy krzewów & 20 \\ \cline{3-5}
-    % & & PTRK02 & krzewy & 15 \\ 
-    % \hline
-    % PTUT & uprawa trwała & PTUT03 & sad & 100 \\ \cline{3-5}
-    % & & PTUT02 & plantacja & 90 \\ \cline{3-5}
-    % & & PTUT04, PTUT05 & inne & 20 \\ \cline{3-5}
-    % & & PTUT01 & ogród działkowy & 0 $\rightarrow$ NoData \\ 
-    % \hline
-    % PTTR & roślinność trawiasta i uprawa rolna & PTTR02 & grunt orny & 1 \\ \cline{3-5}
-    % & & PTTR01 & roślinność \newline trawiasta & 20 \\ 
-    % \hline
-    % PTKM & teren pod drogami kołowymi, szynowymi i lotniskowymi & PTKM02 & torowisko & 200 \\ \cline{3-5}
-    % & & PTKM01 & droga kołowa & 200 \\ \cline{3-5}
-    % & & PTKM03 & teren pod drogą \newline kołową \newline i torowiskiem & 200 \\ \cline{3-5}
-    % & & PTKM04 & teren pod drogą \newline lotniskową & 0 $\rightarrow$ NoData \\ 
-    % \hline
-    % PTGN & grunt nieużytkowany & PTGN01, PTGN02, PTGN03, PTGN04 & - & 1 \\ 
-    % \hline
-    % PTPL & plac & PTPL01 & - & 50 \\ 
-    % \hline
-    % PTSO & składowisko odpadów & PTSO01, PTSO02 & - & 0 $\rightarrow$ NoData \\ 
-    % \hline
-    % PTWZ & wyrobisko i zwałowisko & PTWZ01, PTWZ02 & - & 0 $\rightarrow$ NoData \\ 
-    % \hline
-    % PTNZ & pozostały teren niezabudowany & PTNZ01, PTNZ02 & - & 150 \\ 
-    % \hline
-    % \end{tabular}
+    \renewcommand{\arraystretch}{1.2}
     \caption{Tabela kosztów względnych dla różnych typów obiektów BDOT.}
     \label{tab:bdot_costs}
 \end{table}
 \vspace{10pt}
+\newpage
 
 Aby uzyskać jedną warstwę z informacją o pokryciu terenu i móc podporządkować każdemu z nich odpowiedni koszt, połączono wszystkie warstwy pokrycia terenu z BDOT10k.
 \vspace{5pt}
@@ -1051,6 +1000,7 @@ Aby uzyskać jedną warstwę z informacją o pokryciu terenu i móc podporządko
 \begin{mintedbox}{python}
 pt_merged = f'{geobaza}\\PT_merged'
 \end{mintedbox}
+\vspace{10pt}
 
 W powstałej warstwie utworzono pole \textit{cost} i przyporządkowano mu odpowiednią wartość w zależności od typu obiektu. Wykorzystano do tego atrybut \textit{x\_kod}, który znajdował się w każdej z warstw i jednoznacznie identyfikował typ pokrycia terenu.
 \vspace{5pt}
@@ -1179,10 +1129,13 @@ out_distance.save(f"{geobaza}\\{wariant}_cost_distance")
 \end{figure}
 \vspace{10pt}
 
-Powyższe rastry wykorzystano w narzędziu \textit{Cost Path} i utworzono ścieżkę przyłącza do linii elektroenergetycznej o najniższym koszcie.
+Powyższe rastry wykorzystano w narzędziu \textit{Cost Path} i utworzono ścieżkę przyłącza do linii elektroenergetycznej o najniższym koszcie. Warstwę  zawierającą istniejące linie pobrano z bazy BDOT10k (OT\_SULN\_L).
+
 \vspace{5pt}
 
 \begin{mintedbox}{python}
+linie_elektroenergetyczne = arcpy.management.Merge([f'{geobaza}\\SULN_L_0210', f'{geobaza}\\SULN_L_0212'], 'linie_elektroenergetyczne')
+
 out_path = arcpy.sa.CostPath(
     in_destination_data=linie_elektroenergetyczne,
     in_cost_distance_raster=f"{geobaza}\\{wariant}_cost_distance",
@@ -1208,14 +1161,14 @@ W przypadku wersji z równymi wagami, linia elektroenergetyczna przechodzi przez
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/dzialki-linie.jpg}
-        \caption{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne - równe wagi}
+        \caption{Mapa przedstawiająca przydatne grupy działek oraz linie elektroenergetyczne - równe wagi}
         \label{fig:dzialki-linie-rowne}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/roznewagi-dzialki-linie.jpg}
-        \caption{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne - różne wagi}
+        \caption{Mapa przedstawiająca przydatną grupę działek oraz linie elektroenergetyczne - różne wagi}
         \label{fig:dzialki-linie-rozne}
     \end{minipage}
 \end{figure}
@@ -1244,14 +1197,14 @@ Ostatecznie wybrano działkę przydatną o najmniejszym koszcie przyłącza.
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/wybrana-dzialka.jpg}
-        \caption{Mapa przedstawiająca wybraną działkę - równe wagi}
+        \caption{Mapa przedstawiająca wybraną grupę działek - równe wagi}
         \label{fig:dzialki-linie-rowne}
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/roznewagi-wybrana-dzialka.jpg}
-        \caption{Mapa przedstawiająca wybraną działkę - różne wagi}
+        \caption{Mapa przedstawiająca wybraną grupę działek - różne wagi}
         \label{fig:dzialki-linie-rowne}
     \end{minipage}
 \end{figure}
@@ -1263,8 +1216,8 @@ Stworzony model należało przetestować na innym obszarze. Wybrano do tego celu
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{img/plesna-polozenie.jpg}
-    \caption{Położenie gminy na mapie województwa małopolskiego}
+    \includegraphics[width=0.75\textwidth]{img/plesna.png}
+    \caption{Położenie gminy Pleśna na mapie województwa małopolskiego}
 \end{figure}
 
 \subsection{Kryterium 1: odległość od rzek i zbiorników wodnych}
@@ -1281,14 +1234,14 @@ W gminie występuje duża gęstość rzek i zbiorników wodnych, lecz ze względ
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/plesna-kryterium1-woda.jpg}
-        \caption{Mapa przydatności dla kryterium 1. zawierająca rzeki oraz zbiorniki wodne}
+        \caption{Rzeki oraz wody powierzchniowe na tle mapy przydatności}
         \label{fig:kryterium1-woda}
     \end{minipage}
 \end{figure}
-
+\newpage
 
 \subsection{Kryterium 2: odległość od budynków mieszkalnych}
-Jak widać poniżej, w gminie znajduje się wiele budynków mieszkalnych, rozmieszczonych mniej więcj równomiernie po całym jej obszarze. Duża część terenu zostaje już na tym etapie wyeliminowana ze względu na obecność kryterium ostrego odległości powyżej 150 metrów od budynków mieszkalnych.
+Jak widać poniżej, w gminie znajduje się wiele budynków mieszkalnych, rozmieszczonych mniej więcej równomiernie po całym jej obszarze. Duża część terenu zostaje na tym etapie wyeliminowana ze względu na obecność kryterium ostrego, mówiącego o zachowaniu odległości powyżej 150 metrów od budynków mieszkalnych.
 
 \begin{figure}[H]
     \begin{minipage}[t]{0.48\textwidth}
@@ -1301,14 +1254,14 @@ Jak widać poniżej, w gminie znajduje się wiele budynków mieszkalnych, rozmie
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/plesna-kryterium2-budynki.jpg}
-        \caption{Mapa przydatności dla kryterium 2. zawierająca budynki mieszkalne}
+        \caption{Budynki mieszkalne na tle mapy przydatności}
         \label{fig:kryterium2-budynki}
     \end{minipage}
 \end{figure}
 
 
 \subsection{Kryterium 3: pokrycie terenu}
-Duża część obszaru, która dla kryterium 2. przyjęła dużą przydatność, tutaj zostaje całkowicie wyeliminowana ze względu na pojawienie się tam terenów leśnych.
+Duża część obszaru, która dla kryterium 2. przyjęła dużą przydatność, zostaje całkowicie wyeliminowana ze względu na istnienie tam terenów leśnych.
 
 \begin{figure}[H]
     \begin{minipage}[t]{0.48\textwidth}
@@ -1321,11 +1274,11 @@ Duża część obszaru, która dla kryterium 2. przyjęła dużą przydatność,
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/plesna-kryterium3-lasy.jpg}
-        \caption{Mapa przydatności dla kryterium 3. zawierająca lasy}
+        \caption{Obszary leśne na tle mapy przydatnośći}
         \label{fig:kryterium3-lasy}
     \end{minipage}
 \end{figure}
-
+\newpage
 
 \subsection{Kryterium 4: dostęp do dróg utwardzonych}
 Stosunkowo duża część obszaru, w porównaniu do poprzednich kryteriów, cechuje się dużą przydatnością dla tego kryterium.
@@ -1341,14 +1294,14 @@ Stosunkowo duża część obszaru, w porównaniu do poprzednich kryteriów, cech
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/plesna-kryterium4-drogi.jpg}
-        \caption{Mapa przydatności dla kryterium 4. zawierająca drogi utwardzone}
+        \caption{Drogi utwardzone na tle mapy przydatności}
         \label{fig:kryterium4-drogi}
     \end{minipage}
 \end{figure}
 
 
 \subsection{Kryterium 5: nachylenie stoków}
-Gmina ta również jest gminą o stosunkowo dużych nachyleniach stoków. Lecz istnieją również w niej tereny o niższych stokach, na zachodzie oraz północnym wschodzie.
+Gmina ta również jest gminą o stosunkowo dużych nachyleniach stoków. Lecz istnieją w niej również tereny o niższych nachyleniach: większe na zachodzie i północnym wschodzie oraz węższe w głębi gminy.
 
 \begin{figure}[H]
     \begin{minipage}[t]{0.48\textwidth}
@@ -1361,14 +1314,14 @@ Gmina ta również jest gminą o stosunkowo dużych nachyleniach stoków. Lecz i
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/plesna-kryterium5-stoki.jpg}
-        \caption{Mapa nachyleń stoków wykorzystana podczas sprawdzania kryterium 5.}
+        \caption{Mapa nachyleń stoków utworzona podczas sprawdzania kryterium 5.}
         \label{fig:kryterium5-stoki}
     \end{minipage}
 \end{figure}
-
+\newpage
 
 \subsection{Kryterium 6: dostęp do światła słonecznego}
-Pod względem tego kryterium gmina wydaje się w dużej części korzystnie uwarunkowana.
+Pod względem tego kryterium gmina wydaje się w dużej części stosunkowo korzystnie uwarunkowana.
 
 \begin{figure}[H]
     \begin{minipage}[t]{0.48\textwidth}
@@ -1381,7 +1334,7 @@ Pod względem tego kryterium gmina wydaje się w dużej części korzystnie uwar
     \begin{minipage}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{img/plesna-kryterium6-aspect.jpg}
-        \caption{Mapa przydatności dla kryterium 6. zawierająca stopień wystawy słonecznej}
+        \caption{Mapa wystawy słonecznej utworzona podczas sprawdzania kryterium 6.}
         \label{fig:kryterium6-aspect}
     \end{minipage}
 \end{figure}
@@ -1422,12 +1375,13 @@ Pod względem tego kryterium gmina wydaje się w dużej części korzystnie uwar
     \end{minipage}
 \end{figure}
 
-Ogromna część obszaru gminy jest zupełnie nieprzydatna do inwestycji ze względu na bliskość budynków mieszkalnych, lasów czy wody. Elementy te wzajemnie się uzupełniają i jeżeli na terenie nie ma budynków mieszkalnych, to istnieje tam las, albo przepływa tam rzeka. W wyniku tego niemal cała gmina jest czarną plamą oznaczającą zerową przydatność.
+Ogromna część obszaru gminy jest zupełnie nieprzydatna pod inwestycję ze względu na bliskość budynków mieszkalnych, lasów czy wody. Czynniki te wzajemnie uzupełniają teren i jeżeli na terenie nie ma budynków mieszkalnych, to istnieje tam las, albo przepływa rzeka. W wyniku tego niemal cała gmina jest na poniższej mapie czarną plamą oznaczającą zerową przydatność.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/plesna-ostre-layout.jpg}
     \caption{Suma kryteriów ostrych}
+    \label{fig:ostre-plesna}
 \end{figure}
 
 \begin{figure}[H]
@@ -1445,6 +1399,8 @@ Ogromna część obszaru gminy jest zupełnie nieprzydatna do inwestycji ze wzgl
         \label{fig:wynik-rozne}
     \end{minipage}
 \end{figure}
+\newpage
+
 Niewielkie obszary przydatne, jakie pozostały po połączeniu kryteriów, znajdują się głównie w zachodniej części gminy Pleśna.
 
 \begin{figure}[H]
@@ -1462,21 +1418,24 @@ Niewielkie obszary przydatne, jakie pozostały po połączeniu kryteriów, znajd
         \label{fig:wynik-reklasyfikacja-rozne}
     \end{minipage}
 \end{figure}
+\vspace{10pt}
+
 \subsection{Wybór przydatnych działek}
 
-Pomimo nikłej obecności terenów przydatnych pod tę inwestycję w gminie, udało się wyłonić te same 2 grupy działek dla obu wariantów.
+Pomimo niewielkiej powierzchni terenów przydatnych pod tę inwestycję w gminie, udało się wyłonić te same 2 grupy działek dla obu wariantów.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/plesna-przydatne-dzialki.jpg}
-    \caption{Mapa przedstawiająca przydatne działki}
+    \caption{Mapa przedstawiająca przydatne grupy działek}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-przydatne-ortofoto.jpg}
-    \caption{Mapa przedstawiająca przydatne działki na ortofotomapie}
+    \caption{Mapa przedstawiająca przydatne grupy działek na ortofotomapie}
 \end{figure}
+\vspace{10pt}
 
 \subsection{Przyłącze do sieci SN}
 \begin{figure}[H]
@@ -1500,7 +1459,7 @@ Pomimo nikłej obecności terenów przydatnych pod tę inwestycję w gminie, uda
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{img/plesna-dzialki-linie.jpg}
-    \caption{Mapa przedstawiająca przydatne działki oraz linie elektroenergetyczne}
+    \caption{Mapa przedstawiająca przydatne grupy działek oraz istniejące linie elektroenergetyczne}
 \end{figure}
 
 Przez jedną z wytypowanych grup działek przechodzi już linia elektroenergetyczna, w związku z czym ścieżka przyłącza nie została utworzona.
@@ -1511,5 +1470,49 @@ Przez jedną z wytypowanych grup działek przechodzi już linia elektroenergetyc
     \caption{Mapa przedstawiająca linie elektroenergetyczne przechodzące przez jedną z grup działek}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-wybrana-grupa-dzialek.jpg}
+    \caption{Mapa przedstawiająca wybraną grupę działek}
+\end{figure}
+\vspace{10pt}
+
+Wybrana grupa składa się z 8 mniejszych działek.
+\vspace{5pt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{img/plesna-wybrana-grupa-dzialek-iledzialek.jpg}
+    \caption{Mapa przedstawiająca wybraną grupę działek}
+\end{figure}
+
+\section{Podsumowanie i wnioski}
+\subsection{Omówienie wyników}
+Skonstruowany model pozwolił na wstępny wybór dla każdej z gmin co najmniej jednej grupy działek przydatnych o wymaganej powierzchni. \newline 
+Dla gminy Świeradów-Zdrój zmiana wag dla kryteriów spowodowała wybór innej grupy działek przydatnych. W przypadku wag autorskich nieprzydatna okazała się jedna z grup działek uznana za przydatną dla wag równych. Zmieniło to również ostateczny rezultat, bo ta grupa działek była już połączona do sieci SN. \newline
+Dla gminy Pleśna zmiana wag dla kryteriów nie przyniosła żadnych zmian - zostały wyłonione te same dwie grupy działek, w związku z czym na koniec została wybrana ta sama działka.
+
+\subsection{Strona techniczna}
+Sam proces tworzenia modelu był od początku miejscami frustrujący. Pierwsze problemy rozpoczęły się już przy próbie uruchomienia Python Notebooka w oprogramowaniu ArcGIS Pro. Z narzędzia, pomimo wielu prób konfiguracji na różnych urządzeniach, reinstalacji czy zmian różnych ustawień, nie dało się skorzystać.
+Próbowano utworzyć skrypt Jupyter Notebook w zewnętrznym edytorze kodu oraz wybrać jako interpreter odpowiednią wersję Pythona dostarczaną razem z oprogramowaniem ESRI. Niestety, tutaj również wystąpiły problemy niezależne od użytkownika, dlatego zdecydowano się na tworzenie skryptu w czystym Pythonie w zewnętrznym IDE. Należało tutaj zadbać o ustawienie odpowiednich ścieżek do geobazy i poszczególnych danych.
+\newline
+Po uruchomieniu programu często ArcGIS napotykał problemy z zapisem plików, występował błąd \textit{Could not save raster dataset to ... with output format FGDBR.} W związku z tym nigdy nie można było być pewnym, czy uda się uzyskać oczekiwany wynik działania programu po pierwszym uruchomieniu. Najczęściej rozwiązaniem było usunięcie z geobazy plików nadpisywanych po każdym uruchomieniu programu, ale nierzadko zdarzało się, że jedynym wyjściem był restart ArcGIS-a.
+
+\subsection{Wyzwania, problemy modelu}
+Projekt zakładał konieczność posiadania danych nie tylko dla samej gminy, w której ma znajdować się farma, ale też dla buforu 200-metrowego wokół gminy. Większość danych wykorzystanych w zadaniu pochodzi z bazy BDOT10k, której najmniejszą paczkę można pobrać dla powiatu. Istnieje więc konieczność pobrania i wyselekcjonowania niezbędnych danych również dla powiatów sąsiadujących, jeżeli gmina jest jedną z obrzeżnych gmin swojego powiatu. W pesymistycznym przypadku, należałoby również uzyskać dane z innych krajów.
+
+Dobór odpowiednich wartości granicznych dla narzędzia \textit{Fuzzy Membership} był jednym z największych wyzwań. Poza ostrymi granicami czasochłonne było wypróbowywanie różnych wersji funkcji oraz dopasowywanie ich tak, aby obszarów przydatnych nie pozostało za dużo bądź za mało. Zarówno gmina Świeradów-Zdrój, jak i Pleśna są gminami o niskiej przydatności do celów budowy farmy fotowoltaicznej, co szczególnie widać na mapie [\ref{fig:ostre-plesna}] kryteriów ostrych dla gminy Pleśna. Próg przydatności 80/90\% był nieosiągalny niezależnie od ustawionych parametrów funkcji fuzzy. 
+
+Kryterium utrudniającym w zachowaniu uniwersalności projektu było kryterium odległości od ważnych węzłów komunikacyjnych. Należałoby ustalić, jak maksymalnie daleko od obszaru gminy może znajdować się węzeł, bądź bardziej sformalizować, czym jest węzeł. 
+
+Podczas tworzenia mapy kosztów względnych dla obszaru projektu okazało się, że najbardziej aktualna wersja bazy BDOT10k nie posiada już dla warstw pokrycia terenu pola o nazwie \textit{x\_kod} jednoznacznie identyfikującego każde pokrycie terenu. W związku z tym skorzystano w tym celu ze starszej wersji.
+
+\subsection{Propozycja dodatkowego kryterium}
+Przykładem nieuwzględnionego kryterium mogłoby być kryterium zanieczyszczenia powietrza - lokalizacja farmy powinna znajdować się z dala od obszarów o wysokim stężeniu smogu i pyłów, ponieważ zanieczyszczenia osadzające się na panelach znacząco obniżają ich wydajność. Dane na temat średniego rocznego stężenia m. in. pyłu zawieszonego PM2,5 udostępnia Główny Inspektor Ochrony Środowiska\footnote{https://powietrze.gios.gov.pl/pjp/maps/modeling}. Pobrane ze strony GIOŚ dane są w formacie Shapefile, dlatego należałoby je najpierw zamienić na raster. Powstały raster możnaby następnie zreklasyfikować, na przykład w następujący sposób:
+\begin{enumerate}[label=•]
+    \item wartości \( \leq 10  \mu\mathrm{g}/m^3 \) otrzymują wartość członkostwa 1 (pełne spełnienie kryterium)
+    \item wartości \( \geq 20 \mu\mathrm{g}/m^3 \) otrzymują wartość członkostwa 0 (nie spełniają kryterium)
+    \item wartości pomiędzy 10 a 20 \( \mu\mathrm{g}/m^3 \) otrzymują wartość członkostwa proporcjonalnie do ich odległości od 20
+\end{enumerate}
 
 \end{document}
